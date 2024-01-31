@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="touch-gestures">Touch Gestures</h1>
+<p>Accessing raw data from the Glass touchpad is possible with the Android SDK.</p>
+<p>However, the GDK provides a gesture detector that automatically detects common gestures on Glass, including tapping, swiping, and scrolling.</p>
+<p>In addition, simple gestures are translated into D-pad events by default for easy processing without using a gesture detector.</p>
+<h2 id="detecting-gestures-as-d-pad-key-events">Detecting gestures as D-pad key events</h2>
+<p>By default, the Glass system translates simple gestures into D-pad key events. This lets you listen for <a href="http://developer.android.com/reference/android/view/KeyEvent.Callback.html#onKeyDown(int,%20android.view.KeyEvent)"><code>onKeyDown()</code></a> and <a href="http://developer.android.com/reference/android/view/KeyEvent.Callback.html#onKeyUp(int,%20android.view.KeyEvent)"><code>onKeyUp()</code></a> events on activities or views to process the following gestures as D-pad keys:</p>
+<ul>
+<li>  Tap translates to <a href="http://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_DPAD_CENTER"><code>KEYCODE_DPAD_CENTER</code></a>.</li>
+<li>  A camera button press translates to <a href="http://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_CAMERA"><code>KEYCODE_CAMERA</code></a>.</li>
+<li>  Swipe down translates to <a href="http://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_BACK"><code>KEYCODE_BACK</code></a>.</li>
+</ul>
+<p>The following snippet detects when users tap down on the touchpad:</p>
+<pre><code class="language-java">public class MyActivity extends Activity {
+    ...
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            &#47;&#47; user tapped touchpad, do something
+            return true;
+        }
+        ...
+        return super.onKeyDown(keycode, event);
+    }
+}
+</code></pre>
+<p>A method to detect taps on individual views is to implement <a href="http://developer.android.com/reference/android/view/View.OnClickListener.html"><code>OnClickListener</code></a> for the view. When users tap the touchpad (translated as a D-pad center button click) with the view in focus, the view can handle the event with an <a href="http://developer.android.com/reference/android/view/View.OnClickListener.html"><code>OnClickListener</code></a>.</p>
+<pre><code class="language-java">public final class MyActivity extends Activity implements OnClickListener {
+
+    View cardView;
+
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        cardView = new Card(this).setText("Tap to carry out an action").getView();
+        &#47;&#47; To receive touch events from the touchpad, the view should be focusable.
+        cardView.setOnClickListener(this);
+        cardView.setFocusable(true);
+        cardView.setFocusableInTouchMode(true);
+        setContentView(cardView);
+    }
+
+    @Override
+    protected void onResume() {
+        &#47;&#47; To receive touch events from the touchpad, the view should have focus.
+        cardView.requestFocus();
+        super.onResume();
+    }
+
+    @Override
+    public void onClick(View v) {
+        &#47;&#47; perform desired action
+    }
+}
+</code></pre>
+<h2 id="detecting-gestures-with-a-gesture-detector">Detecting gestures with a gesture detector</h2>
+<p>Gesture detectors let you detect simple gestures as well as more complex gestures, such as those that use multiple fingers or scrolling. Complex gestures do not have a corresponding D-pad key.</p>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector">GestureDetector</a> [<strong>TODO</strong>: ADD LINK] provides listener interfaces that you can implement to be notified of a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/Gesture">Gesture</a> [<strong>TODO</strong>: ADD LINK].</p>
+<h3 id="detecting-activity-level-gestures">Detecting activity-level gestures</h3>
+<p>Detecting gestures at the activity level is appropriate when you don&#8217;t care what part of your UI has focus. For example, if you want to bring up a menu when users tap the touchpad, regardless of what view has focus, you&#8217;d handle the <a href="http://developer.android.com/reference/android/view/MotionEvent.html"><code>MotionEvent</code></a> inside the activity.</p>
+<p>The following example:</p>
+<ol>
+<li> Creates a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] that implements listeners to process recognized gestures.</li>
+<li> Overrides the activity&#8217;s <a href="http://developer.android.com/reference/android/app/Activity.html#onGenericMotionEvent(android.view.MotionEvent)"><code>onGenericMotionEvent()</code></a> method to pass the motion events to the gesture detector&#8217;s <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector#onMotionEvent(android.view.MotionEvent)"><code>onMotionEvent()</code></a> [<strong>TODO</strong>: ADD LINK] method.</li>
+</ol>
+<p>When a motion event occurs, the system passes it to the gesture detector. If recognized, the gesture detector notifies the appropriate listener to process the event.</p>
+<pre><code class="language-java">public class MainActivity extends Activity {
+    private GestureDetector mGestureDetector;
+    &#47;&#47; ...
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        &#47;&#47; ...
+        mGestureDetector = createGestureDetector(this);
+    }
+
+    private GestureDetector createGestureDetector(Context context) {
+    GestureDetector gestureDetector = new GestureDetector(context);
+        &#47;&#47;Create a base listener for generic gestures
+        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+            @Override
+            public boolean onGesture(Gesture gesture) {
+                if (gesture == Gesture.TAP) {
+                    &#47;&#47; do something on tap
+                    return true;
+                } else if (gesture == Gesture.TWO_TAP) {
+                    &#47;&#47; do something on two finger tap
+                    return true;
+                } else if (gesture == Gesture.SWIPE_RIGHT) {
+                    &#47;&#47; do something on right (forward) swipe
+                    return true;
+                } else if (gesture == Gesture.SWIPE_LEFT) {
+                    &#47;&#47; do something on left (backwards) swipe
+                    return true;
+                }
+                return false;
+            }
+        });
+        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
+            @Override
+            public void onFingerCountChanged(int previousCount, int currentCount) {
+              &#47;&#47; do something on finger count changes
+            }
+        });
+        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
+            @Override
+            public boolean onScroll(float displacement, float delta, float velocity) {
+                &#47;&#47; do something on scrolling
+            }
+        });
+        return gestureDetector;
+    }
+
+    &#47;*
+     * Send generic motion events to the gesture detector
+     *&#47;
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (mGestureDetector != null) {
+            return mGestureDetector.onMotionEvent(event);
+        }
+        return false;
+    }
+}
+</code></pre>
+<h3 id="detecting-view-level-gestures">Detecting view-level gestures</h3>
+<p>Detecting gestures at the view level is appropriate when you want to do different things depending on what view has focus.</p>
+<p>The following example:</p>
+<ol>
+<li> Creates a custom view that overrides the <a href="http://developer.android.com/reference/android/view/View.html#dispatchGenericFocusedEvent(android.view.MotionEvent)"><code>dispatchGenericFocusedEvent()</code></a> method. When a motion event occurs, this method passes the motion event to the gesture detector.</li>
+<li> Declares the view to be focusable so that it detects events when it has focus.</li>
+<li> Creates a <a href="https://developers.google.com/glass/eap/gdk/reference/com/google/android/glass/gesture/touch/GestureDetector"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] that implements listeners to process recognized gestures.</li>
+</ol>
+<p>When the gesture detector recognizes a motion while the view is in focus, the gesture detector calls the appropriate listener.</p>
+<pre><code class="language-java">&#47;**
+ * TextView that handles touchpad input (currently only TAP).
+ *&#47;
+public class TouchpadHandlingTextView extends TextView
+        implements OnAttachStateChangeListener{
+
+    private final GestureDetector mTouchDetector;
+
+    public TouchpadHandlingTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mTouchDetector = createGestureDetector(context);
+        &#47;&#47; must set the view to be focusable
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+    }
+
+    public TouchpadHandlingTextView(Context context) {
+        this(context, null);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(View v) {
+        requestFocus();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(View v) {
+    }
+
+    &#47;**
+     * Pass a MotionEvent into the gesture detector
+     *&#47;
+    @Override
+    public boolean dispatchGenericFocusedEvent(MotionEvent event) {
+        if (isFocused()) {
+            return mTouchDetector.onMotionEvent(event);
+        }
+        return super.dispatchGenericFocusedEvent(event);
+    }
+
+    &#47;**
+     * Create gesture detector that triggers onClickListener. Implement
+     * onClickListener in your Activity and override
+     * onClick() to handle the "tap" gesture.
+     *&#47;
+    private GestureDetector createGestureDetector(Context context) {
+        GestureDetector gd = new GestureDetector(context);
+        gd.setBaseListener(new GestureDetector.BaseListener() {
+
+            @Override
+            public boolean onGesture(Gesture gesture) {
+                if (gesture == Gesture.TAP) {
+                    return performClick();
+                }
+                return false;
+            }
+        });
+        return gd;
+    }
+}
+</code></pre>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

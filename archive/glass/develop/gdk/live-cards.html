@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="live-cards">Live Cards</h1>
+<p>Live cards appear in the present section of the timeline and display information that is relevant at the current time.</p>
+<p>Live cards are great for when users are actively engaged in a task, but want to periodically check Glass for supplemental information. For example, checking their time on a run every few minutes or controlling a music player when they want to skip or pause a song.</p>
+<p>If this is your first time developing for Glass, read the <a href="ongoing-task.html">Ongoing Task guide</a> first. That document goes over how to build a complete Glassware with a live card, following our design best practices.</p>
+<h2 id="how-they-work">How they work</h2>
+<p>Live cards provide a way for cards to persist in the present section of the timeline for as long as they are relevant. Unlike static cards, live cards do not persist in the timeline, and users explicitly remove them after they are done with them.</p>
+<blockquote>
+<p><strong>Note</strong>: The Glass system also removes live cards during a reboot or when the system is low on resources unless you use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#attach(android.app.Service)">LiveCard.attach()</a> [<strong>TODO</strong> ADD LINK].</p>
+</blockquote>
+<p><img src="static/live-card-timeline.png" alt="" /></p>
+<p>Users typically start live cards by speaking a voice command at the main menu, which starts a background service that renders the card. They can then tap the card to show menu items that can act on the card, such as dismissing it from the timeline.</p>
+<h2 id="when-to-use-them">When to use them</h2>
+<p>Live cards are designed for ongoing tasks that users can jump in and out of frequently, such as a display that shows the running status of an action, an animated map during navigation, or a music player.</p>
+<p>Another benefit of live cards is that they are well suited for UIs that require real-time interaction with users and real-time updates to the UI.</p>
+<p>When using live cards, the timeline still has control over the user experience, so swiping forward or backward on a live card navigates the timeline instead acting on the live card itself. In addition, the screen turns on and off based on how the system behaves (after 5 seconds with no user interaction or during a head nudge up).</p>
+<p>However, live cards have access to many of the same features an <a href="ui.html">immersion</a> does, such as sensor or GPS data. This lets you still create compelling experiences while allowing users to stay in the timeline experience to do other things, such as check messages.</p>
+<h2 id="architecture">Architecture</h2>
+<p><img src="static/live-card-service.png" alt="" /></p>
+<p>Live cards require a long running context to own them for the entire time that they are visible, so manage them in a background service.</p>
+<p>You can then publish and render a live card as soon as the service starts or in response to other events that the service monitors. You can render live cards with low frequency (once every few seconds), or high frequency (up to as many times as the system can refresh).</p>
+<p>When the live card is no longer relevant, destroy the service to stop rendering.</p>
+<h3 id="low-frequency-rendering">Low-Frequency Rendering</h3>
+<p>Low-frequency rendering is limited to a small set of Android views and can only update the display once every few seconds.</p>
+<p>It&#8217;s a simple way to create live cards with simple content that doesn&#8217;t require constant rendering or frequent updates.</p>
+<p><img src="static/live-card-remoteview.png" alt="" /></p>
+<h3 id="high-frequency-rendering">High Frequency Rendering</h3>
+<p>High frequency rendering lets you use more of the options available in the Android graphics framework.</p>
+<p>The system gives you the actual backing surface of the live card that you draw directly onto using 2D views and layouts or even complex 3D graphics with OpenGL.</p>
+<p><img src="static/live-card-surface.png" alt="" /></p>
+<h2 id="creating-low-frequency-live-cards">Creating low-frequency live cards</h2>
+<p>Low frequency rendering requires a UI supplied by a <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> object, which supports the following subset of Android layouts and views:</p>
+<ul>st
+<li><a href="http://developer.android.com/reference/android/widget/FrameLayout.html"><code>FrameLayout</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/LinearLayout.html"><code>LinearLayout</code></a>`</li>
+<li><a href="http://developer.android.com/reference/android/widget/RelativeLayout.html"><code>RelativeLayout</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/GridLayout.html"><code>GridLayout</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/AdapterViewFlipper.html"><code>AdapterViewFlipper</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/AnalogClock.html"><code>AnalogClock</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/Button.html"><code>Button</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/Chronometer.html"><code>Chronometer</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/GridView.html"><code>GridView</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/ImageButton.html"><code>ImageButton</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/ImageView.html"><code>ImageView</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/ListView.html"><code>ListView</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/ProgressBar.html"><code>ProgressBar</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/StackView.html"><code>StackView</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/TextView.html"><code>TextView</code></a></li>
+<li><a href="http://developer.android.com/reference/android/widget/ViewFlipper.html"><code>ViewFlipper</code></a></li>
+</ul>
+<p>Use low frequency rendering when:</p>
+<ul>
+<li>  You only require the standard Android view APIs listed previously.</li>
+<li>  You only require relatively infrequent updates (a few seconds between refreshes).</li>
+</ul>
+<p>Keep in mind:</p>
+<ul>
+<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setAction(android.app.PendingIntent)"><code>setAction()</code></a> for the timeline to publish the card.</li>
+<li>  To make changes to a card after publishing, call <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setViews(android.widget.RemoteViews)"><code>setViews()</code></a> on the card with the updated <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> object before publishing again.</li>
+</ul>
+<p>To create low-frequency live cards:</p>
+<ol>
+<li> Create the layout or view that you want to render. The following example shows a layout for an imaginary basketball game:</li>
+</ol>
+<pre><code class="language-xml"> &#60;TextView
+     android:id="@+id&#47;home_team_name_text_view"
+     android:layout_width="249px"
+     android:layout_height="wrap_content"
+     android:layout_alignParentRight="true"
+     android:gravity="center"
+     android:textSize="40px" &#47;&#62;
+
+ &#60;TextView
+     android:id="@+id&#47;away_team_name_text_view"
+     android:layout_width="249px"
+     android:layout_height="wrap_content"
+     android:layout_alignParentLeft="true"
+     android:gravity="center"
+     android:textSize="40px" &#47;&#62;
+
+ &#60;TextView
+     android:id="@+id&#47;away_score_text_view"
+     android:layout_width="249px"
+     android:layout_height="wrap_content"
+     android:layout_alignLeft="@+id&#47;away_team_name_text_view"
+     android:layout_below="@+id&#47;away_team_name_text_view"
+     android:gravity="center"
+     android:textSize="70px" &#47;&#62;
+
+ &#60;TextView
+     android:id="@+id&#47;home_score_text_view"
+     android:layout_width="249px"
+     android:layout_height="wrap_content"
+     android:layout_alignLeft="@+id&#47;home_team_name_text_view"
+     android:layout_below="@+id&#47;home_team_name_text_view"
+     android:gravity="center"
+     android:textSize="70px" &#47;&#62;
+
+ &#60;TextView
+     android:id="@+id&#47;footer_text"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_alignParentBottom="true"
+     android:layout_alignParentLeft="true"
+     android:layout_marginBottom="33px"
+     android:textSize="26px" &#47;&#62;
+</code></pre>
+<ol start="2">
+<li>Create a service that manages the live card and renders your layout or view. This example service updates the score of an imaginary basketball game every 30 seconds.</li>
+</ol>
+<pre><code class="language-java">import java.util.Random;
+
+import com.google.android.glass.timeline.LiveCard;
+import com.google.android.glass.timeline.LiveCard.PublishMode;
+
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+import android.widget.RemoteViews;
+
+public class LiveCardService extends Service {
+
+    private static final String LIVE_CARD_TAG = "LiveCardDemo";
+
+    private LiveCard mLiveCard;
+    private RemoteViews mLiveCardView;
+
+    private int homeScore, awayScore;
+    private Random mPointsGenerator;
+
+    private final Handler mHandler = new Handler();
+    private final UpdateLiveCardRunnable mUpdateLiveCardRunnable =
+        new UpdateLiveCardRunnable();
+    private static final long DELAY_MILLIS = 30000;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mPointsGenerator = new Random();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mLiveCard == null) {
+
+            &#47;&#47; Get an instance of a live card
+            mLiveCard = new LiveCard(this, LIVE_CARD_TAG);
+
+            &#47;&#47; Inflate a layout into a remote view
+            mLiveCardView = new RemoteViews(getPackageName(),
+                    R.layout.main_layout);
+
+            &#47;&#47; Set up initial RemoteViews values
+            homeScore = 0;
+            awayScore = 0;
+            mLiveCardView.setTextViewText(R.id.home_team_name_text_view,
+                    getString(R.string.home_team));
+            mLiveCardView.setTextViewText(R.id.away_team_name_text_view,
+                    getString(R.string.away_team));
+            mLiveCardView.setTextViewText(R.id.footer_text,
+                    getString(R.string.game_quarter));
+
+            &#47;&#47; Set up the live card&#39;s action with a pending intent
+            &#47;&#47; to show a menu when tapped
+            Intent menuIntent = new Intent(this, MenuActivity.class);
+            menuIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mLiveCard.setAction(PendingIntent.getActivity(
+                    this, 0, menuIntent, 0));
+
+            &#47;&#47; Publish the live card
+            mLiveCard.publish(PublishMode.REVEAL);
+
+            &#47;&#47; Queue the update text runnable
+            mHandler.post(mUpdateLiveCardRunnable);
+        }
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mLiveCard != null &#38;&#38; mLiveCard.isPublished()) {
+            &#47;&#47;Stop the handler from queuing more Runnable jobs
+            mUpdateLiveCardRunnable.setStop(true);
+
+            mLiveCard.unpublish();
+            mLiveCard = null;
+        }
+        super.onDestroy();
+    }
+
+    &#47;**
+     * Runnable that updates live card contents
+     *&#47;
+    private class UpdateLiveCardRunnable implements Runnable{
+
+        private boolean mIsStopped = false;
+
+        &#47;*
+         * Updates the card with a fake score every 30 seconds as a demonstration.
+         * You also probably want to display something useful in your live card.
+         *
+         * If you are executing a long running task to get data to update a
+         * live card(e.g, making a web call), do this in another thread or
+         * AsyncTask.
+         *&#47;
+        public void run(){
+            if(!isStopped()){
+                &#47;&#47; Generate fake points.
+                homeScore += mPointsGenerator.nextInt(3);
+                awayScore += mPointsGenerator.nextInt(3);
+
+                &#47;&#47; Update the remote view with the new scores.
+                mLiveCardView.setTextViewText(R.id.home_score_text_view,
+                        String.valueOf(homeScore));
+                mLiveCardView.setTextViewText(R.id.away_score_text_view,
+                        String.valueOf(awayScore));
+
+                &#47;&#47; Always call setViews() to update the live card&#39;s RemoteViews.
+                mLiveCard.setViews(mLiveCardView);
+
+                &#47;&#47; Queue another score update in 30 seconds.
+                mHandler.postDelayed(mUpdateLiveCardRunnable, DELAY_MILLIS);
+            }
+        }
+
+        public boolean isStopped() {
+            return mIsStopped;
+        }
+
+        public void setStop(boolean isStopped) {
+            this.mIsStopped = isStopped;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+      &#47;*
+       * If you need to set up interprocess communication
+       * (activity to a service, for instance), return a binder object
+       * so that the client can receive and modify data in this service.
+       *
+       * A typical use is to give a menu activity access to a binder object
+       * if it is trying to change a setting that is managed by the live card
+       * service. The menu activity in this sample does not require any
+       * of these capabilities, so this just returns null.
+       *&#47;
+       return null;
+    }
+}
+</code></pre>
+<h2 id="creating-high-frequency-live-cards">Creating high-frequency live cards</h2>
+<p>High frequency rendering lets you draw directly on the backing <a href="http://developer.android.com/reference/android/view/Surface.html">Surface</a> of the live card.</p>
+<p>Use high frequency rendering when:</p>
+<ul>
+<li>  You need to update the live card frequently (many times a second).</li>
+<li>  You need flexibility in what you can render. High frequency rendering lets you use Android views and layouts to complex OpenGL graphics.</li>
+</ul>
+<p>Keep in mind:</p>
+<ul>
+<li>  You should always create a background service to render on the live card&#8217;s surface.</li>
+<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setAction(android.app.PendingIntent)"><code>setAction()</code></a>.</li>
+<li>  Use <a href="https://developers.google.com/glass/eap/gdk/reference/com/google/android/glass/timeline/GlRenderer"><code>GLRenderer</code></a> if you are rendering OpenGL and <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a> for all other cases.</li>
+</ul>
+<h3 id="using-directrenderingcallback">Using DirectRenderingCallback</h3>
+<p>To create live cards with standard Android views and drawing logic:</p>
+<ol>
+<li> Create a class that implements <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a>, Implementing the callbacks in these interfaces let you carry out actions during important events of the live card&#8217;s surface lifecycle.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: The callback methods in these interfaces are not invoked on the main UI thread.</p>
+</blockquote>
+<pre><code class="language-java">public class LiveCardRenderer implements DirectRenderingCallback {
+
+    &#47;&#47; About 30 FPS.
+    private static final long FRAME_TIME_MILLIS = 33;
+
+    private SurfaceHolder mHolder;
+    private boolean mPaused;
+    private RenderThread mRenderThread;
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format,
+            int width, int height) {
+        &#47;&#47; Update your views accordingly.
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        mPaused = false;
+        mHolder = holder;
+        updateRendering();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        mHolder = null;
+        updateRendering();
+    }
+
+    @Override
+    public void renderingPaused(SurfaceHolder holder, boolean paused) {
+        mPaused = paused;
+        updateRendering();
+    }
+
+    &#47;**
+     * Start or stop rendering according to the timeline state.
+     *&#47;
+    private void updateRendering() {
+        boolean shouldRender = (mHolder != null) &#38;&#38; !mPaused;
+        boolean rendering = mRenderThread != null;
+
+        if (shouldRender != rendering) {
+            if (shouldRender) {
+                mRenderThread = new RenderThread();
+                mRenderThread.start();
+            } else {
+                mRenderThread.quit();
+                mRenderThread = null;
+            }
+        }
+    }
+
+    &#47;**
+     * Draws the view in the SurfaceHolder&#39;s canvas.
+     *&#47;
+    private void draw() {
+        Canvas canvas;
+        try {
+            canvas = mHolder.lockCanvas();
+        } catch (Exception e) {
+            return;
+        }
+        if (canvas != null) {
+            &#47;&#47; Draw on the canvas.
+            mHolder.unlockCanvasAndPost(canvas);
+        }
+    }
+
+    &#47;**
+     * Redraws in the background.
+     *&#47;
+    private class RenderThread extends Thread {
+        private boolean mShouldRun;
+
+        &#47;**
+         * Initializes the background rendering thread.
+         *&#47;
+        public RenderThread() {
+            mShouldRun = true;
+        }
+
+        &#47;**
+         * Returns true if the rendering thread should continue to run.
+         *
+         * @return true if the rendering thread should continue to run
+         *&#47;
+        private synchronized boolean shouldRun() {
+            return mShouldRun;
+        }
+
+        &#47;**
+         * Requests that the rendering thread exit at the next
+         opportunity.
+         *&#47;
+        public synchronized void quit() {
+            mShouldRun = false;
+        }
+
+        @Override
+        public void run() {
+            while (shouldRun()) {
+                draw();
+                SystemClock.sleep(FRAME_TIME_MILLIS);
+            }
+        }
+    }
+}
+</code></pre>
+<ol start="2">
+<li>Set an instance of your <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a> as the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> <a href="http://developer.android.com/reference/android/view/SurfaceHolder.Callback.html"><code>SurfaceHolder</code></a>&#8217;s callback. This lets the live card know what logic to use to render itself.</li>
+</ol>
+<pre><code class="language-java">&#47;&#47; Tag used to identify the LiveCard in debugging logs.
+private static final String LIVE_CARD_TAG = "my_card";
+
+&#47;&#47; Cached instance of the LiveCard created by the publishCard() method.
+private LiveCard mLiveCard;
+
+private void publishCard(Context context) {
+    if (mLiveCard == null) {
+        mLiveCard = new LiveCard(this, LIVE_CARD_TAG);
+
+        &#47;&#47; Enable direct rendering.
+        mLiveCard.setDirectRenderingEnabled(true);
+        mLiveCard.getSurfaceHolder().addCallback(
+                new LiveCardRenderer());
+
+        Intent intent = new Intent(context, MenuActivity.class);
+        mLiveCard.setAction(PendingIntent.getActivity(context, 0,
+                intent, 0));
+        mLiveCard.publish(LiveCard.PublishMode.SILENT);
+    } else {
+        &#47;&#47; Card is already published.
+        return;
+    }
+}
+
+private void unpublishCard(Context context) {
+    if (mLiveCard != null) {
+        mLiveCard.unpublish();
+        mLiveCard = null;
+    }
+}
+</code></pre>
+<h3 id="using-opengl">Using OpenGL</h3>
+<ol>
+<li> Create a class that implements <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/GlRenderer"><code>GlRenderer</code></a> [<strong>TODO</strong>: ADD LINK]. Implementing the callbacks in this interface lets you carry out actions during important events of the live card&#8217;s surface lifecycle. This example draws a colored, rotating cube.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: The callback methods in these interfaces are not invoked on the main UI thread.</p>
+</blockquote>
+<pre><code class="language-java">import com.google.android.glass.timeline.GlRenderer;
+
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+import android.os.SystemClock;
+
+import java.util.concurrent.TimeUnit;
+import javax.microedition.khronos.egl.EGLConfig;
+
+&#47;**
+ * Renders a 3D OpenGL Cube on a {@link LiveCard}.
+ *&#47;
+public class CubeRenderer implements GlRenderer {
+
+    &#47;** Rotation increment per frame. *&#47;
+    private static final float CUBE_ROTATION_INCREMENT = 0.6f;
+
+    &#47;** The refresh rate, in frames per second. *&#47;
+    private static final int REFRESH_RATE_FPS = 60;
+
+    &#47;** The duration, in milliseconds, of one frame. *&#47;
+    private static final float FRAME_TIME_MILLIS = TimeUnit.SECONDS.toMillis(1) &#47; REFRESH_RATE_FPS;
+
+    private final float[] mMVPMatrix;
+    private final float[] mProjectionMatrix;
+    private final float[] mViewMatrix;
+    private final float[] mRotationMatrix;
+    private final float[] mFinalMVPMatrix;
+
+    private Cube mCube;
+    private float mCubeRotation;
+    private long mLastUpdateMillis;
+
+    public CubeRenderer() {
+        mMVPMatrix = new float[16];
+        mProjectionMatrix = new float[16];
+        mViewMatrix = new float[16];
+        mRotationMatrix = new float[16];
+        mFinalMVPMatrix = new float[16];
+
+        &#47;&#47; Set the fixed camera position (View matrix).
+        Matrix.setLookAtM(mViewMatrix, 0, 0.0f, 0.0f, -4.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+
+    @Override
+    public void onSurfaceCreated(EGLConfig config) {
+        &#47;&#47; Set the background frame color
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearDepthf(1.0f);
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glDepthFunc(GLES20.GL_LEQUAL);
+        mCube = new Cube();
+    }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+        float ratio = (float) width &#47; height;
+
+        GLES20.glViewport(0, 0, width, height);
+        &#47;&#47; This projection matrix is applied to object coordinates in the onDrawFrame() method.
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1.0f, 1.0f, 3.0f, 7.0f);
+        &#47;&#47; modelView = projection x view
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+    }
+
+    @Override
+    public void onDrawFrame() {
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        &#47;&#47; Apply the rotation.
+        Matrix.setRotateM(mRotationMatrix, 0, mCubeRotation, 1.0f, 1.0f, 1.0f);
+        &#47;&#47; Combine the rotation matrix with the projection and camera view
+        Matrix.multiplyMM(mFinalMVPMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+
+        &#47;&#47; Draw cube.
+        mCube.draw(mFinalMVPMatrix);
+        updateCubeRotation();
+    }
+
+    &#47;** Updates the cube rotation. *&#47;
+    private void updateCubeRotation() {
+        if (mLastUpdateMillis != 0) {
+            float factor = (SystemClock.elapsedRealtime() - mLastUpdateMillis) &#47; FRAME_TIME_MILLIS;
+            mCubeRotation += CUBE_ROTATION_INCREMENT * factor;
+        }
+        mLastUpdateMillis = SystemClock.elapsedRealtime();
+    }
+}
+</code></pre>
+<ol start="2">
+<li>Create a service that manages the live card and sets the <code>CubeRenderer</code> class as the live card&#8217;s renderer.</li>
+</ol>
+<pre><code class="language-java">import com.google.android.glass.timeline.LiveCard;
+import com.google.android.glass.timeline.LiveCard.PublishMode;
+
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+&#47;**
+ * Creates a {@link LiveCard} rendering a rotating 3D cube with OpenGL.
+ *&#47;
+public class OpenGlService extends Service {
+
+    private static final String LIVE_CARD_TAG = "opengl";
+
+    private LiveCard mLiveCard;
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mLiveCard == null) {
+            mLiveCard = new LiveCard(this, LIVE_CARD_TAG);
+            mLiveCard.setRenderer(new CubeRenderer());
+            mLiveCard.setAction(
+                    PendingIntent.getActivity(this, 0, new Intent(this, MenuActivity.class), 0));
+            mLiveCard.publish(PublishMode.REVEAL);
+        } else {
+            mLiveCard.navigate();
+        }
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mLiveCard != null &#38;&#38; mLiveCard.isPublished()) {
+            mLiveCard.unpublish();
+            mLiveCard = null;
+        }
+        super.onDestroy();
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: For completeness, here&#8217;s the actual <strong>Cube</strong> class that the <strong>CubeRenderer</strong> draws.</p>
+</blockquote>
+<pre><code class="language-java">import android.opengl.GLES20;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+&#47;**
+ * Renders a 3D Cube using OpenGL ES 2.0.
+ *
+ * For more information on how to use OpenGL ES 2.0 on Android, see the
+ * &#60;a href="&#47;&#47;developer.android.com&#47;training&#47;graphics&#47;opengl&#47;index.html"&#62;
+ * Displaying Graphics with OpenGL ES&#60;&#47;a&#62; developer guide.
+ *&#47;
+public class Cube {
+
+    &#47;** Cube vertices *&#47;
+    private static final float VERTICES[] = {
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f
+    };
+
+    &#47;** Vertex colors. *&#47;
+    private static final float COLORS[] = {
+        0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 1.0f, 1.0f,
+    };
+
+
+    &#47;** Order to draw vertices as triangles. *&#47;
+    private static final byte INDICES[] = {
+        0, 1, 3, 3, 1, 2, &#47;&#47; Front face.
+        0, 1, 4, 4, 5, 1, &#47;&#47; Bottom face.
+        1, 2, 5, 5, 6, 2, &#47;&#47; Right face.
+        2, 3, 6, 6, 7, 3, &#47;&#47; Top face.
+        3, 7, 4, 4, 3, 0, &#47;&#47; Left face.
+        4, 5, 7, 7, 6, 5, &#47;&#47; Rear face.
+    };
+
+    &#47;** Number of coordinates per vertex in {@link VERTICES}. *&#47;
+    private static final int COORDS_PER_VERTEX = 3;
+
+    &#47;** Number of values per colors in {@link COLORS}. *&#47;
+    private static final int VALUES_PER_COLOR = 4;
+
+    &#47;** Vertex size in bytes. *&#47;
+    private final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4;
+
+    &#47;** Color size in bytes. *&#47;
+    private final int COLOR_STRIDE = VALUES_PER_COLOR * 4;
+
+    &#47;** Shader code for the vertex. *&#47;
+    private static final String VERTEX_SHADER_CODE =
+            "uniform mat4 uMVPMatrix;" +
+            "attribute vec4 vPosition;" +
+            "attribute vec4 vColor;" +
+            "varying vec4 _vColor;" +
+            "void main() {" +
+            "  _vColor = vColor;" +
+            "  gl_Position = uMVPMatrix * vPosition;" +
+            "}";
+
+    &#47;** Shader code for the fragment. *&#47;
+    private static final String FRAGMENT_SHADER_CODE =
+            "precision mediump float;" +
+            "varying vec4 _vColor;" +
+            "void main() {" +
+            "  gl_FragColor = _vColor;" +
+            "}";
+
+
+    private final FloatBuffer mVertexBuffer;
+    private final FloatBuffer mColorBuffer;
+    private final ByteBuffer mIndexBuffer;
+    private final int mProgram;
+    private final int mPositionHandle;
+    private final int mColorHandle;
+    private final int mMVPMatrixHandle;
+
+    public Cube() {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(VERTICES.length * 4);
+
+        byteBuffer.order(ByteOrder.nativeOrder());
+        mVertexBuffer = byteBuffer.asFloatBuffer();
+        mVertexBuffer.put(VERTICES);
+        mVertexBuffer.position(0);
+
+        byteBuffer = ByteBuffer.allocateDirect(COLORS.length * 4);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        mColorBuffer = byteBuffer.asFloatBuffer();
+        mColorBuffer.put(COLORS);
+        mColorBuffer.position(0);
+
+        mIndexBuffer = ByteBuffer.allocateDirect(INDICES.length);
+        mIndexBuffer.put(INDICES);
+        mIndexBuffer.position(0);
+
+        mProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(mProgram, loadShader(GLES20.GL_VERTEX_SHADER, VERTEX_SHADER_CODE));
+        GLES20.glAttachShader(
+                mProgram, loadShader(GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER_CODE));
+        GLES20.glLinkProgram(mProgram);
+
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+        mColorHandle = GLES20.glGetAttribLocation(mProgram, "vColor");
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+    }
+
+    &#47;**
+     * Encapsulates the OpenGL ES instructions for drawing this shape.
+     *
+     * @param mvpMatrix The Model View Project matrix in which to draw this shape
+     *&#47;
+    public void draw(float[] mvpMatrix) {
+        &#47;&#47; Add program to OpenGL environment.
+        GLES20.glUseProgram(mProgram);
+
+        &#47;&#47; Prepare the cube coordinate data.
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        GLES20.glVertexAttribPointer(
+                mPositionHandle, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, mVertexBuffer);
+
+        &#47;&#47; Prepare the cube color data.
+        GLES20.glEnableVertexAttribArray(mColorHandle);
+        GLES20.glVertexAttribPointer(
+                mColorHandle, 4, GLES20.GL_FLOAT, false, COLOR_STRIDE, mColorBuffer);
+
+        &#47;&#47; Apply the projection and view transformation.
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+        &#47;&#47; Draw the cube.
+        GLES20.glDrawElements(
+                GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_BYTE, mIndexBuffer);
+
+        &#47;&#47; Disable vertex arrays.
+        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        GLES20.glDisableVertexAttribArray(mColorHandle);
+    }
+
+    &#47;** Loads the provided shader in the program. *&#47;
+    private static int loadShader(int type, String shaderCode){
+        int shader = GLES20.glCreateShader(type);
+
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
+    }
+}
+</code></pre>
+<h2 id="giving-a-live-card-focus">Giving a live card focus</h2>
+<p>When you publish a live card with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#publish(com.google.android.glass.timeline.LiveCard.PublishMode)"><code>LiveCard.publish()</code></a> [<strong>TODO</strong>: ADD LINK], you pass it a parameter to control whether or not it has focus immediately.</p>
+<p>To have the timeline jump to the card immediately after publishing, use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard.PublishMode#REVEAL"><code>LiveCard.PublishMode.REVEAL</code></a> [<strong>TODO</strong>: ADD LINK]. To publish the card silently and make users navigate to the card on their own, use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard.PublishMode#SILENT"><code>LiveCard.PublishMode.SILENT</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p>In addition, the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#navigate()"><code>LiveCard.navigate()</code></a> [<strong>TODO</strong>: ADD LINK] method lets you jump to the card after it&#8217;s been published. For example, if users try to start your live card from the main voice menu and it is already started, you can jump to the live card with this method.</p>
+<h2 id="creating-and-displaying-a-menu">Creating and displaying a menu</h2>
+<p>Live cards cannot show their own menu system, so you need to create an activity to display a menu for the live card.</p>
+<p>The menu activity can then have items for stopping the live card, starting an immersion, or any other action you want to carry out. You can also add system settings activities, such as volume control, as a menu item. For more information, see <a href="starting-glassware.html#starting_settings">Starting settings</a>.</p>
+<blockquote>
+<p><strong>Note</strong>: All live cards should have a <strong>Stop</strong> menu item so that users can remove the live card from the timeline when they are done with it.</p>
+</blockquote>
+<p><img src="static/live-card-menu.png" alt="" /></p>
+<h3 id="creating-menu-resources">Creating menu resources</h3>
+<p>Creating menu resources is the same as on the Android platform, but follow these guidelines for Glass:</p>
+<ul>
+<li>  For each menu item, provide a 50 × 50 pixel menu item icon. The menu icon must be white in color on a transparent background. See the <a href="../../menu_icons.zip">Glass menu item icons</a> for an example or to download them for your own use.</li>
+<li>  Use a short name that describes the action and is in title case. An imperative verb works well (for example, <strong>Share</strong> or <strong>Reply all</strong>).</li>
+<li>  Glass does not display live cards without a menu item. At the very least, provide a <strong>Stop</strong> menu item, so users can remove the live card from the timeline.</li>
+<li>  The <a href="http://developer.android.com/reference/android/widget/CheckBox.html">CheckBox</a> widget is not supported.</li>
+</ul>
+<pre><code class="language-xml">&#60;menu xmlns:android="http:&#47;&#47;schemas.android.com&#47;apk&#47;res&#47;android"&#62;
+    &#60;item
+        android:id="@+id&#47;menu_item_1"
+        android:title="@string&#47;Menu_Item_1"       &#60;!-- must have "Stop" menu item --&#62;
+        android:icon="@drawable&#47;menu_item_1_icon" &#47;&#62;   &#60;!-- white on transparent icon --&#62;
+&#60;&#47;menu&#62;
+</code></pre>
+<h3 id="creating-an-activity-to-handle-menu-callbacks">Creating an activity to handle menu callbacks</h3>
+<p>You must define a menu activity that your live card invokes when users tap on it.</p>
+<p>Override the following <a href="http://developer.android.com/reference/android/app/Activity.html"><code>Activity</code></a> callback methods to properly create, show, and dismiss menus in your menu activity:</p>
+<ol>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onCreateOptionsMenu(android.view.Menu)"><code>onCreateOptionsMenu()</code></a> inflates the XML menu resource.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onAttachedToWindow()"><code>onAttachedToWindow()</code></a> shows the menu when the activity is in focus.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onPrepareOptionsMenu(android.view.Menu)"><code>onPrepareOptionsMenu()</code></a> shows or hides menu items if required. For example, you can show different menu items based on what users are doing. For example, you can show different menu items based on some contextual data.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)"><code>onOptionsItemSelected()</code></a> handles user selection.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onOptionsMenuClosed(android.view.Menu)"><code>onOptionsMenuClosed()</code></a> to finish the activity, so that it no longer appears over the live card.</li>
+</ol>
+<p>You must finish the activity here so it is properly finished when the menu is closed by a selection or by a swipe down.</p>
+<pre><code class="language-java">&#47;**
+ * Activity showing the options menu.
+ *&#47;
+public class MenuActivity extends Activity {
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        openOptionsMenu();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.stopwatch, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        &#47;&#47; Handle item selection.
+        switch (item.getItemId()) {
+            case R.id.stop:
+                stopService(new Intent(this, StopwatchService.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        &#47;&#47; Nothing else to do, closing the activity.
+        finish();
+    }
+}
+</code></pre>
+<h3 id="making-the-menu-activity-transparent">Making the menu activity transparent</h3>
+<p>To be consistent with Glass style, make the menu activity translucent, so that the live card is still visible below the menu:</p>
+<ol>
+<li>Create a <code>res&#47;values&#47;styles.xml</code> file and declare a style that makes the activity&#8217;s background transparent:</li>
+</ol>
+<pre><code class="language-xml">&#60;resources&#62;
+    &#60;style name="MenuTheme" parent="@android:style&#47;Theme.DeviceDefault"&#62;
+        &#60;item name="android:windowBackground"&#62;@android:color&#47;transparent&#60;&#47;item&#62;
+        &#60;item name="android:colorBackgroundCacheHint"&#62;@null&#60;&#47;item&#62;
+        &#60;item name="android:windowIsTranslucent"&#62;true&#60;&#47;item&#62;
+        &#60;item name="android:windowAnimationStyle"&#62;@null&#60;&#47;item&#62;
+    &#60;&#47;style&#62;
+&#60;&#47;resources&#62;
+</code></pre>
+<ol start="2">
+<li>In your <code>AndroidManifest.xml</code> file, assign the theme to the menu activity:</li>
+</ol>
+<pre><code class="language-xml">&#60;?xml version="1.0" encoding="utf-8"?&#62;
+    &#60;manifest ... &#62;
+      ...
+        &#60;application ... &#62;
+            ...
+            &#60;activity
+                android:name=".MenuActivity"
+                android:theme="@style&#47;MenuTheme"
+                ...&#62;
+            &#60;&#47;activity&#62;
+        &#60;&#47;application&#62;
+
+    &#60;&#47;manifest&#62;
+</code></pre>
+<h3 id="displaying-the-menu">Displaying the menu</h3>
+<p>Provide a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> for the card&#8217;s action using <code>setAction()</code>. The pending intent is used to start the menu activity when users tap on the card:</p>
+<pre><code class="language-java">Intent menuIntent = new Intent(this, MenuActivity.class);
+mLiveCard.setAction(PendingIntent.getActivity(this, 0, menuIntent, 0));
+mLiveCard.publish(LiveCard.PublishMode.REVEAL); &#47;&#47; or SILENT
+</code></pre>
+<h3 id="supporting-contextual-voice-commands">Supporting contextual voice commands</h3>
+<ol>
+<li> Indicate that your <code>MenuActivity</code> supports <a href="https://developers.google.com/glass/develop/gdk/voice#contextual_voice_commands">contextual voice commands</a> [<strong>TODO</strong>: ADD LINK]:</li>
+</ol>
+<pre><code class="language-java">&#47;&#47; Initialize your LiveCard as usual.
+mLiveCard.setVoiceActionEnabled(true);
+mLiveCard.publish(LiveCard.PublishMode.REVEAL); &#47;&#47; or SILENT
+</code></pre>
+<ol start="2">
+<li>Modify your <code>MenuActivity</code> to support invocation through the voice flow:</li>
+</ol>
+<pre><code class="language-java">&#47;**
+ * Activity showing the options menu.
+ *&#47;
+public class MenuActivity extends Activity {
+
+    private boolean mFromLiveCardVoice;
+    private boolean mIsFinishing;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFromLiveCardVoice =
+                getIntent().getBooleanExtra(LiveCard.EXTRA_FROM_LIVECARD_VOICE, false);
+        if (mFromLiveCardVoice) {
+            &#47;&#47; When activated by voice from a live card, enable voice commands. The menu
+            &#47;&#47; will automatically "jump" ahead to the items (skipping the guard phrase
+            &#47;&#47; that was already said at the live card).
+            getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
+        }
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (!mFromLiveCardVoice) {
+            openOptionsMenu();
+        }
+    }
+
+    @Override
+    public boolean onCreatePanelMenu(int featureId, Menu menu) {
+        if (isMyMenu(featureId)) {
+            getMenuInflater().inflate(R.menu.stopwatch, menu);
+            return true;
+        }
+        return super.onCreatePanelMenu(featureId, menu);
+    }
+
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        if (isMyMenu(featureId)) {
+            &#47;&#47; Don&#39;t reopen menu once we are finishing. This is necessary
+            &#47;&#47; since voice menus reopen themselves while in focus.
+            return !mIsFinishing;
+        }
+        return super.onPreparePanel(featureId, view, menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (isMyMenu(featureId)) {
+            &#47;&#47; Handle item selection.
+            switch (item.getItemId()) {
+                case R.id.stop_this:
+                    stopService(new Intent(this, StopwatchService.class));
+                    return true;
+            }
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    @Override
+    public void onPanelClosed(int featureId, Menu menu) {
+        super.onPanelClosed(featureId, menu);
+        if (isMyMenu(featureId)) {
+            &#47;&#47; When the menu panel closes, either an item is selected from the menu or the
+            &#47;&#47; menu is dismissed by swiping down. Either way, we end the activity.
+            isFinishing = true;
+            finish();
+        }
+    }
+
+    &#47;**
+     * Returns {@code true} when the {@code featureId} belongs to the options menu or voice
+     * menu that are controlled by this menu activity.
+     *&#47;
+    private boolean isMyMenu(int featureId) {
+        return featureId == Window.FEATURE_OPTIONS_PANEL ||
+               featureId == WindowUtils.FEATURE_VOICE_COMMANDS;
+    }
+}
+</code></pre>
+<p>Check out the <a href="https://developers.google.com/glass/develop/gdk/voice#contextual_voice_commands">contextual voice commands</a> [<strong>TODO</strong>: ADD LINK] guide for more information.</p>
+<h3 id="menu-utilities">Menu utilities</h3>
+<p>A few helper methods are available to modify the look and behavior of menus. See <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/MenuUtils"><code>MenuUtils</code></a> [<strong>TODO</strong>: ADD LINK] for more information.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

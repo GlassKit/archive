@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="gesturedetector.onefingerscrolllistener">GestureDetector.OneFingerScrollListener</h1>
+<p>Added in API level XE21</p>
+<p>This listener receives continuous one finger horizontal scrolling events.</p>
+<p>Note that this listener will not report scrolling events if there has been two or more fingers on the touch pad after the initial down event.</p>
+<table>
+<thead>
+<tr>
+<th>Public Method</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abstract boolean</td>
+<td><a href="#onOneFingerScroll">onOneFingerScroll</a>(float displacement, float delta, float velocity)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-methods">Public Methods</h2>
+<p>Added in API level XE21</p>
+<h4 id="public-abstract-booleanononefingerscrollfloat-displacementfloat-deltafloat-velocity">public abstract boolean <strong>onOneFingerScroll</strong> (float displacement, float delta, float velocity) </h4>
+<p>Called while the user is scrolling after initial horizontal scroll.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>displacement</td>
+<td>distance between scroll state entering x value</td>
+</tr>
+<tr>
+<td>delta</td>
+<td>delta between two consecutive x motion events</td>
+</tr>
+<tr>
+<td>velocity</td>
+<td>velocity of current x motion event</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns</h5>
+<ul>
+<li><code>true</code> if the events were handled</li>
+</ul>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

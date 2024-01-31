@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="cardbuilder">CardBuilder</h1>
+<p>Added in API level XE21</p>
+<p>The <a href="CardBuilder.html"><code>CardBuilder</code></a> class helps with building Glass-themed cards with various layouts.</p>
+<p>See <a href="/archive/glass/develop/gdk/card-design.html#glass-styled_cards">Creating Glass-styled cards</a> for more information and sample code.</p>
+<h3 id="general-usage">General usage</h3>
+<ol>
+<li> Create a <code>CardBuilder</code> object, passing the desired <a href="CardBuilder.Layout.html"><code>CardBuilder.Layout</code></a> to the constructor.</li>
+<li> Set content on the card with the <code>add&#47;set*</code> family of methods.</li>
+<li> Get the <code>View</code> by calling <a href="#getView()"><code>getView()</code></a> or get a <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> object with <a href="#getRemoteViews()"><code>getRemoteViews()</code></a>.</li>
+</ol>
+<h3 id="recycling-note-for-embedded-layouts">Recycling note for embedded layouts</h3>
+<p>When using <a href="CardBuilder.Layout.html#EMBED_INSIDE"><code>EMBED_INSIDE</code></a> <code>CardBuilder</code> makes no distinction between different embedded layouts when recycling views. If you have two <code>CardBuilder</code> instances with <code>EMBED_INSIDE</code> but one has layout A and the other has layout B, they will be treated as the same by <code>CardBuilder</code>.</p>
+<p>If this behavior is undesirable (for example, when using a <a href="CardScrollAdapter.html"><code>CardScrollAdapter</code></a> with different embedded layouts), you must distinguish them by returning different view types from <a href="CardScrollAdapter.html#getItemViewType(int)"><code>getItemViewType(int)</code></a> so that the recycler only sends you <code>convertView</code>s with nested layouts that you expect for a particular item.</p>
+<p>If you need to support cards with multiple embedded layouts alongside the built-in layouts, we recommend that you return view types numbered <a href="#getViewTypeCount()"><code>getViewTypeCount()</code></a>, <code>CardBuilder.getViewTypeCount() + 1</code>, and so on.</p>
+<table>
+<thead>
+<tr>
+<th>Nested Classes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enum</td>
+<td><a href="CardBuilder.Layout">CardBuilder.Layout</a></td>
+<td>Defines the visual layouts for cards.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Constructors</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#CardBuilder(android.content.Context,%20com.google.android.glass.widget.CardBuilder.Layout)">CardBuilder</a>(<a href="http://developer.android.com/reference/android/content/Context.html">Context</a> context, <a href="CardBuilder.Layout.html">CardBuilder.Layout</a> layout)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#addImage(android.graphics.drawable.Drawable)">addImage</a>(<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> imageDrawable)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#addImage(android.graphics.Bitmap)">addImage</a>(<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> imageBitmap)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#addImage(int)">addImage</a>(int imageId)</td>
+</tr>
+<tr>
+<td>void</td>
+<td><a href="#clearImages">clearImages</a>()</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#getItemViewType()">getItemViewType</a>()</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a></td>
+<td><a href="#getRemoteViews()">getRemoteViews</a>()</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/android/view/View.html">View</a></td>
+<td><a href="#getView(android.view.View,%20android.view.ViewGroup)">getView</a>(<a href="http://developer.android.com/reference/android/view/View.html">View</a> convertView, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> parent)</td>
+</tr>
+<tr>
+<td>static int</td>
+<td><a href="#getViewTypeCount()">getViewTypeCount</a>()</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setAttributionIcon(android.graphics.Bitmap)">setAttributionIcon</a>(<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> iconBitmap)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setAttributionIcon(android.graphics.drawable.Drawable)">setAttributionIcon</a>(<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> iconDrawable)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setAttributionIcon(int)">setAttributionIcon</a>(int iconId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setEmbeddedLayout(int)">setEmbeddedLayout</a>(int layoutResId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setFootnote(java.lang.CharSequence)">setFootNote</a>(<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> footnote)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setFootnote(int)">setFootNote</a>(int footnoteId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setHeading(java.lang.CharSequence)">setHeading</a>(<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> heading)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setHeading(int)">setHeading</a>(int headingId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setIcon(android.graphics.Bitmap)">setIcon</a>(<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> iconBitmap)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setIcon(android.graphics.drawable.Drawable)">setIcon</a>(<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> iconDrawable)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setIcon(int)">setIcon</a>(int iconId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setSubheading(java.lang.CharSequence)">setSubheading</a>(<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> subheading)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setSubheading(int)">setSubheading</a>(int subheadingId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setText(int)">setText</a>(int textId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setText(java.lang.CharSequence)">setText</a>(<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> text)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setTimestamp(java.lang.CharSequence)">setTimestamp</a>(<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> timestamp)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#setTimestamp(int)">setTimestamp</a>(int timestampId)</td>
+</tr>
+<tr>
+<td><a href="CardBuilder.html">CardBuilder</a></td>
+<td><a href="#showStackIndicator(boolean)">showStackIndicator</a>(boolean visible)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-constructors">Public Constructors</h2>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildercontextcontextcardbuilder.layoutlayout">public <strong>CardBuilder</strong> (<a href="http://developer.android.com/reference/android/content/Context.html">Context</a> context, <a href="CardBuilder.Layout.html">CardBuilder.Layout</a> layout) </h4>
+<p>Constructs a new <code>CardBuilder</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>context</td>
+<td>the <code>Context</code> that will be used by the builder to create its views.</td>
+</tr>
+<tr>
+<td>layout</td>
+<td>the desired layout for the card</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-methods">Public Methods</h2>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderaddimagedrawableimagedrawable">public <a href="CardBuilder.html">CardBuilder</a> <strong>addImage</strong> (<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> imageDrawable) </h4>
+<p>Adds an image, specified as a <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html"><code>Drawable</code></a>, to the card.</p>
+<p>This method only applies to cards that are converted into views using <a href="CardBuilder#getView()"><code>getView()</code></a>. <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> built by <code>CardBuilder</code> only support <code>Bitmap</code> and resource-based images. <code>Drawable</code> images on <code>RemoteViews</code> are not supported.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imageDrawable</td>
+<td>the <code>Drawable</code> image to add</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderaddimagebitmapimagebitmap">public <a href="CardBuilder.html">CardBuilder</a> <strong>addImage</strong> (<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> imageBitmap)</h4>
+<p>Adds an image, specified as a <a href="http://developer.android.com/reference/android/graphics/Bitmap.html"><code>Bitmap</code></a>, to the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imageBitmap</td>
+<td>the <code>Bitmap</code> image to add</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-1">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderaddimageint-imageid">public <a href="CardBuilder.html">CardBuilder</a> <strong>addImage</strong> (int imageId) </h4>
+<p>Adds an image, specified as a drawable resource, to the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>imageId</td>
+<td>the resource ID of the image to add</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-2">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="public-voidclearimages">public void <strong>clearImages</strong> () </h4>
+<p>Clears all images that were previously added to the card.</p>
+<p>Added in API level XE21</p>
+<h4 id="public-intgetitemviewtype">public int <strong>getItemViewType</strong> () </h4>
+<p>Returns the view type of this particular card.</p>
+<p>Useful in combination with an adapter. See <a href="http://developer.android.com/reference/android/widget/Adapter.html#getItemViewType(int)"><code>getItemViewType(int)</code></a>.</p>
+<p>Added in API level XE21</p>
+<h4 id="publicremoteviewsgetremoteviews">public <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> <strong>getRemoteViews</strong> () </h4>
+<p>Returns a <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> representation of this card.</p>
+<p>Added in API level XE21</p>
+<h4 id="publicviewgetviewviewconvertviewviewgroupparent">public <a href="http://developer.android.com/reference/android/view/View.html">View</a> <strong>getView</strong> (<a href="http://developer.android.com/reference/android/view/View.html">View</a> convertView, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> parent) </h4>
+<p>Returns a <a href="http://developer.android.com/reference/android/view/View.html"><code>View</code></a> representation of this card.</p>
+<p>Useful in combination with an adapter. See <a href="http://developer.android.com/reference/android/widget/Adapter.html#getView(int,%20android.view.View,%20android.view.ViewGroup)"><code>getView(int, View, ViewGroup)</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>convertView</td>
+<td>an old view to reuse, if possible; can be <code>null</code> Note: if this view does not have the right type, this method creates a new view</td>
+</tr>
+<tr>
+<td>parent</td>
+<td>that this view will eventually be attached to, maybe <code>null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Added in API level XE21</p>
+<h4 id="publicviewgetview">public <a href="http://developer.android.com/reference/android/view/View.html">View</a> <strong>getView</strong> () </h4>
+<p>Returns a <a href="http://developer.android.com/reference/android/view/View.html"><code>View</code></a> representation of this card.</p>
+<p>Added in API level XE21</p>
+<h4 id="public-static-intgetviewtypecount">public static int <strong>getViewTypeCount</strong> () </h4>
+<p>Returns the total number of view types cards can take.</p>
+<p>Useful in combination with an adapter. See <a href="http://developer.android.com/reference/android/widget/Adapter.html#getViewTypeCount()"><code>getViewTypeCount()</code></a>.</p>
+<p>Added in API level XE22</p>
+<h4 id="publiccardbuildersetattributioniconbitmapiconbitmap">public <a href="CardBuilder.html">CardBuilder</a> <strong>setAttributionIcon</strong> (<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> iconBitmap) </h4>
+<p>Sets the attribution icon for the card using a <a href="http://developer.android.com/reference/android/graphics/Bitmap.html"><code>Bitmap</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconBitmap</td>
+<td>the <code>Bitmap</code> to use as the attribution icon</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-3">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE22</p>
+<h4 id="publiccardbuildersetattributionicondrawableicondrawable">public <a href="CardBuilder.html">CardBuilder</a> <strong>setAttributionIcon</strong> (<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> iconDrawable) </h4>
+<p>Sets the attribution icon for the card using a <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html"><code>Drawable</code></a>.</p>
+<p>This method only applies to cards that are converted into views using <a href="#getView()"><code>getView()</code></a>. <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> built by <code>CardBuilder</code> only support <code>Bitmap</code> and resource-based images. <code>Drawable</code> images on <code>RemoteViews</code> are not supported.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconDrawable</td>
+<td>the <code>Drawable</code> to use as the attribution icon</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-4">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE22</p>
+<h4 id="publiccardbuildersetattributioniconint-iconid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setAttributionIcon</strong> (int iconId) </h4>
+<p>Sets the attribution icon for the card using a drawable resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconId</td>
+<td>the resource ID to use as the attribution icon</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-5">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE22</p>
+<h4 id="publiccardbuildersetembeddedlayoutint-layoutresid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setEmbeddedLayout</strong> (int layoutResId) </h4>
+<p>Sets the resource ID of the layout to embed in the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>layoutResId</td>
+<td>the resource ID of the layout to embed in the card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-6">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetfootnotecharsequence-footnote">public <a href="CardBuilder.html">CardBuilder</a> <strong>setFootnote</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> footnote) </h4>
+<p>Sets the footnote text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>footnote</td>
+<td>the footnote text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-7">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetfootnoteint-footnoteid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setFootnote</strong> (int footnoteId) </h4>
+<p>Sets the footnote text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>footnoteId</td>
+<td>the footnote text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-8">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetheadingcharsequence-heading">public <a href="CardBuilder.html">CardBuilder</a> <strong>setHeading</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> heading) </h4>
+<p>Sets the heading text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>heading</td>
+<td>the heading text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-9">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetheadingint-headingid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setHeading</strong> (int headingId) </h4>
+<p>Sets the footnote text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>headingId</td>
+<td>the heading text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-10">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderseticoncharsequence-footnote">public <a href="CardBuilder.html">CardBuilder</a> <strong>setIcon</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> footnote) </h4>
+<p>Sets the footnote text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>footnote</td>
+<td>the footnote text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-11">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetfootnoteint-footnoteid-1">public <a href="CardBuilder.html">CardBuilder</a> <strong>setFootnote</strong> (int footnoteId) </h4>
+<p>Sets the footnote text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>footnoteId</td>
+<td>the footnote text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-12">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderseticonbitmapiconbitmap">public <a href="CardBuilder.html">CardBuilder</a> <strong>setIcon</strong> (<a href="http://developer.android.com/reference/android/graphics/Bitmap.html">Bitmap</a> iconBitmap)</h4>
+<p>Adds an image, specified as a <a href="http://developer.android.com/reference/android/graphics/Bitmap.html"><code>Bitmap</code></a>, to the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconBitmap</td>
+<td>the <code>Bitmap</code> image to add</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-13">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderseticondrawableicondrawable">public <a href="CardBuilder.html">CardBuilder</a> <strong>setIcon</strong> (<a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html">Drawable</a> iconDrawable) </h4>
+<p>Adds an image, specified as a <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html"><code>Drawable</code></a>, to the card.</p>
+<p>This method only applies to cards that are converted into views using <a href="CardBuilder#getView()"><code>getView()</code></a>. <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> built by <code>CardBuilder</code> only support <code>Bitmap</code> and resource-based images. <code>Drawable</code> images on <code>RemoteViews</code> are not supported.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconDrawable</td>
+<td>the <code>Drawable</code> to use as the icon</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-14">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuilderseticonint-iconid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setIcon</strong> (int iconId) </h4>
+<p>Adds an image, specified as a drawable resource, to the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iconId</td>
+<td>the resource ID to use as the icon</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-15">Returns</h5>
+<ul>
+<li>this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetsubheadingcharsequence-subheading">public <a href="CardBuilder.html">CardBuilder</a> <strong>setSubheading</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> subheading)</h4>
+<p>Sets the subheading text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subheading</td>
+<td>the subheading text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-16">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersetsubheadingint-subheadingid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setSubheading</strong> (int subheadingId)</h4>
+<p>Sets the subheading text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>footnoteId</td>
+<td>the footnote text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-17">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildertextint-textid">public <a href="CardBuilder.html">CardBuilder</a> <strong>Text</strong> (int textId)</h4>
+<p>Sets the main text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>textId</td>
+<td>main text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-18">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersettextcharsequence-text">public <a href="CardBuilder.html">CardBuilder</a> <strong>setText</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> text)</h4>
+<p>Sets the main text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>main text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-19">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersettimestampcharsequencetimestamp">public <a href="CardBuilder.html">CardBuilder</a> <strong>setTimestamp</strong> (<a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> timestamp) </h4>
+<p>Sets the timestamp text for the card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>timestamp</td>
+<td>the timestamp text for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-20">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE21</p>
+<h4 id="publiccardbuildersettimestampint-timestampid">public <a href="CardBuilder.html">CardBuilder</a> <strong>setTimestamp</strong> (int timestampId) </h4>
+<p>Sets the timestamp text for the card using a string resource.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>timestampId</td>
+<td>the timestamp text resource ID for this card</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-21">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<p>Added in API level XE22</p>
+<h4 id="publiccardbuildershowstackindicatorboolean-visible">public <a href="CardBuilder.html">CardBuilder</a> <strong>showStackIndicator</strong> (boolean visible) </h4>
+<p>Shows an indicator if <code>visible</code> is true that this card represents a stack of cards, rather than a single card.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>visible</td>
+<td>true to show the stack indicator, or false to hide it</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-22">Returns</h5>
+<ul>
+<li>  this object for call chaining</li>
+</ul>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

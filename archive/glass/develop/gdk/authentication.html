@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="authentication-for-gdk-glassware">Authentication for GDK Glassware</h1>
+<p>If your GDK Glassware needs to authenticate users against a web service, the GDK provides an API that lets the user enter their credentials when they install your Glassware.</p>
+<p>By using this API, you provide a consistent user experience for Glass users and avoid the overhead of implementing your own custom authentication schemes.</p>
+<blockquote>
+<p><strong>Note</strong>: Currently, you can only test and use this API after we&#8217;ve uploaded your APK to MyGlass, which happens during the review process.</p>
+</blockquote>
+<h2 id="creating-a-google-api-service-account">Creating a Google API service account</h2>
+<p>When authentication is set up correctly, your web app&#8217;s back end uses the Mirror API to push users&#8217; account information to Glass after they authenticate with your service.</p>
+<p>In order to access this API, create a Google API project and then create a client ID for a &#8220;service account&#8221; (and <strong>not</strong> a &#8220;web application&#8221;). By using a service account, users do not have to separately grant your application permission to push their credentials to Glass and won&#8217;t be presented with both the OAuth permissions page and your own authentication page again.</p>
+<p>To create this account:</p>
+<ol>
+<li>Go to the <a href="https://cloud.google.com/console">Google Developers Console</a>.</li>
+<li>Click the <strong>Create Project</strong> button and enter the requested information.</li>
+<li>Once your project is created, make a note of the <strong>Project Number</strong>, which you will need later.</li>
+<li>Under <strong>APIs &#38; auth</strong>, click <strong>APIs</strong> and enable the <strong>Google Mirror API</strong> for your new project.</li>
+<li>Under <strong>APIs &#38; auth</strong>, click <strong>Credentials</strong>, then click <strong>Create New Client ID.</strong> Check the box labeled <strong>Service account</strong> to create a new OAuth 2.0 client ID for the project.</li>
+<li>A popup window will inform you that the private key is being downloaded to your computer and provides you with the password for that private key. <strong>Once you close this window, you will not be able to download this private key or see the password again. If they are ever lost, you must create a new one.</strong></li>
+<li>Make a note of the service account&#8217;s e-mail address, which you will need later to make the API call.</li>
+</ol>
+<h2 id="providing-metadata-about-your-glassware">Providing metadata about your Glassware</h2>
+<p>When you are ready to submit your Glassware, you will need to provide the following information. This allows us to set up your Glassware to be authenticated correctly when you implement it.</p>
+<ul>
+<li>Your <strong>authentication URL</strong>, which users are redirected to when they turn on your Glassware in MyGlass.</li>
+<li>The <strong>account type</strong> (the string you will be using when you call the Android <code>AccountManager</code> APIs on the Glass device)</li>
+<li>The <strong>package name</strong> of your application from your <code>AndroidManifest.xml</code></li>
+<li>The <strong>numeric Google API project ID</strong> of the project that you created above</li>
+<li>The <strong>APK</strong> to upload on MyGlass. For testing, you only need to provide this APK once to handle the initial download when your Glassware is turned on from MyGlass; after that, you can iterate and debug locally by overwriting the APK on your device. Note that this APK needs to meet the following criteria:
+<ul>
+<li>It must be zip-aligned.</li>
+<li>You must not make any changes to the package name or private signing key after this (the Android package manager does not allow upgrades if either of these changes).</li>
+<li>It must be smaller than 50 megabytes.</li>
+<li>It must be compiled using the latest version of the GDK.</li>
+</ul></li>
+</ul>
+<h2 id="implementing-the-authentication-flow">Implementing the authentication flow</h2>
+<p>The following diagram shows the basic authentication flow for GDK Glassware:</p>
+<p><img src="static/gdk-auth.png" alt="" /></p>
+<p>To implement the authentication flow:</p>
+<ol>
+<li> When users turn on your Glassware in MyGlass, they are redirected to your authentication URL. These requests include a query parameter named <code>userToken</code> that you need to use later.</li>
+</ol>
+<blockquote>
+<p><strong>Warning</strong>: Do not store this user token. It is only for use by Google&#8217;s authentication endpoints to map the request back to the originated user during that session only and does not contain any information that can be used to persistently identify the user. The token is not guaranteed to be the same if the user authenticates with the same Glassware multiple times or if the user authenticates with different Glassware from the same developer.</p>
+</blockquote>
+<ol start="2">
+<li> The user enters their credentials on your authentication page.<br/></li>
+<li> Your server validates the user&#8217;s credentials. If the credentials are valid, make a Mirror API call to the <code>mirror.accounts.insert</code> method. This method requires that you specify the <code>https:&#47;&#47;www.googleapis.com&#47;auth&#47;glass.thirdpartyauth</code> scope when you build your Mirror service object. Examples of making this API call using either raw HTTP or Java are shown in the <a href="#account_creation_examples">account creation examples</a>. The parameters and request body that you provide below represent the same information that you would provide to Android&#8217;s <code>AccountManager</code> if you were creating the account directly on the device.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Property name</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>features[]</code></td>
+<td>list of strings</td>
+<td>A list of features (see <a href="https://developer.android.com/reference/android/accounts/AccountManager.html#hasFeatures(android.accounts.Account,%20java.lang.String%5B%5D,%20android.accounts.AccountManagerCallback%3Cjava.lang.Boolean%3E,%20android.os.Handler)"><code>AccountManager.hasFeatures</code></a>).</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>The account password (see <a href="https://developer.android.com/reference/android/accounts/AccountManager.html#getPassword(android.accounts.Account)"><code>AccountManager.getPassword</code></a>). We recommend that you <strong>not</strong> store the user&#8217;s actual password in this field, but instead use it to store long-lived private data like a refresh token.</td>
+</tr>
+<tr>
+<td><code>userData[]</code></td>
+<td>list of objects</td>
+<td>One or more pairs of user data associated with the account (see <a href="https://developer.android.com/reference/android/accounts/AccountManager.html#getUserData(android.accounts.Account,%20java.lang.String)"><code>AccountManager.getUserData</code></a>).</td>
+</tr>
+<tr>
+<td><code>userData[].key</code></td>
+<td>string</td>
+<td>The key associated with a particular user data key-value pair.</td>
+</tr>
+<tr>
+<td><code>userData[].value</code></td>
+<td>string</td>
+<td>The value associated with a particular user data key-value pair.</td>
+</tr>
+<tr>
+<td><code>authTokens[]</code></td>
+<td>list of objects</td>
+<td>One or more auth tokens associated with the account (see <a href="https://developer.android.com/reference/android/accounts/AccountManager.html#getAuthToken(android.accounts.Account,%20java.lang.String,%20android.os.Bundle,%20boolean,%20android.accounts.AccountManagerCallback%3Candroid.os.Bundle%3E,%20android.os.Handler)"><code>AccountManager.getAuthToken</code></a>).</td>
+</tr>
+<tr>
+<td><code>authTokens[].type</code></td>
+<td>string</td>
+<td>The type of the auth token.</td>
+</tr>
+<tr>
+<td><code>authTokens[].authToken</code></td>
+<td>string</td>
+<td>The auth token.</td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li> Upon receiving the <code>mirror.account.insert</code> request, the Mirror API pushes the account to the user&#8217;s Glass device(s), where you can now access it using the <a href="https://developer.android.com/reference/android/accounts/AccountManager.html"><code>AccountManager</code></a> class.</li>
+</ol>
+<h3 id="recommended-authentication-flows">Recommended authentication flows</h3>
+<p>Follow these guidelines to implement a user-friendly authentication flow:</p>
+<ul>
+<li>  Optimize your flow for mobile devices.</li>
+<li>  If your flow has a scope and the user cancels them, have a well-designed error message.</li>
+<li>  Ensure the scopes that you request are actually being used in your Glassware.</li>
+<li>  If a user account can be connected, ensure that you connect it.</li>
+<li>  Where possible, user data should back up to the cloud.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: Install your Glassware at least once through MyGlass to ensure that your authentication flow is successful. As long as you&#8217;ve done this once, you can install via sideloading for testing purposes.</p>
+</blockquote>
+<p>To maintain consistency in Glassware authentication, use one of the following authentication flows:</p>
+<h4 id="mirror-or-hybrid-without-an-account">Mirror or hybrid without an account</h4>
+<ol>
+<li> After toggling on in MyGlass, your authentication URL opens in a pop-up.</li>
+<li> This directly sends the user to scopes to accept.</li>
+<li> After the user accepts or cancels the scopes, close the pop-up.</li>
+</ol>
+<h4 id="mirror-with-an-account">Mirror with an account</h4>
+<ol>
+<li>After toggling on in MyGlass, your authentication URL opens in a pop-up.
+<ul>
+<li>If the user is already signed in to your service, send the user directly to scopes.</li>
+<li>If the user is not signed in, show the sign-in fields, allow them to sign in to your service, and then send them to scopes.</li>
+<li>If the user does not have an account, provide a link to create an account. Users must have a way to create an account as part of the install flow process.</li>
+</ul></li>
+<li> User accepts scopes.
+<ul>
+<li>If your Glassware has configurable settings, send the user to the settings page with reasonable defaults selected.</li>
+<li>If your Glassware does not have configurable settings, send the user to a confirmation page. Close the pop-up if no additional configuration is required.</li>
+</ul></li>
+</ol>
+<h4 id="hybrid-with-an-account">Hybrid with an account</h4>
+<ol>
+<li> After toggling on in MyGlass, your authentication URL opens in a pop-up.
+<ul>
+<li>If the user is already signed in to your service, send the user directly to scopes.</li>
+<li>If the user is not signed in, show sign in fields, allow them to sign in, and then send them to scopes.</li>
+<li>If the user does not have an account, provide a link to create an account.</li>
+</ul></li>
+<li> User accepts scopes.</li>
+<li> Send a request to the Mirror API to insert the GDK Account.
+<ul>
+<li>Send the user to the settings page with reasonable defaults selected.</li>
+<li>Send the user a confirmation page. Close the pop-up if no additional configuration is required.</li>
+</ul></li>
+</ol>
+<h4 id="mirror-or-hybrid-with-an-account-and-custom-scopes">Mirror or hybrid with an account and custom scopes</h4>
+<ol>
+<li> After toggling on in MyGlass, your authentication URL opens in a pop-up.
+<ul>
+<li>If the user is already signed in to your service, send user to your internal scopes</li>
+<li>If the user is not signed in, show sign in fields, allow them to sign in, and then send them to your internal scopes</li>
+<li>If the user does not have an account, provide a link to create an account.</li>
+</ul></li>
+<li> When the user accepts your custom scopes, send user to Google&#8217;s scopes.</li>
+<li> Send a request to the Mirror API to insert the GDK Account.
+<ul>
+<li>Send the user to the settings page with reasonable defaults selected.</li>
+<li>Send the user a confirmation page. Close the pop-up if no additional configuration is required.</li>
+</ul></li>
+</ol>
+<h4 id="mirror-or-hybrid-with-an-androidiphone-app">Mirror or hybrid with an Android&#47;iPhone app</h4>
+<ol>
+<li> After toggling on in MyGlass, your authentication URL opens in a pop-up.</li>
+<li> This directly sends the user to scopes to accept.</li>
+<li> After the user accepts scopes:
+<ul>
+<li>If the user has the companion app and is authenticated, close the pop-up window.</li>
+<li>If not, send the user to an interstitial that directs them to download the app from the Google Play store or iOS store</li>
+</ul></li>
+<li> After installing the app and authenticating, close the pop-up window</li>
+</ol>
+<h4 id="gdk-and-no-account">GDK and no account</h4>
+<p>Toggling the Glassware on in MyGlass is all that is required for this flow.</p>
+<h4 id="gdk-with-an-account">GDK with an account</h4>
+<ol>
+<li> After toggling on in MyGlass, your authentication URL opens in a pop-up.
+<ul>
+<li>If the user is already signed in to your service, send the user to the confirmation screen.</li>
+<li>If the user is not signed in, display the sign in fields, allow them to sign in, and then send them to the confirmation screen.</li>
+<li>If the user does not have an account, provide a link to create an account.</li>
+</ul></li>
+<li> User accepts scopes.</li>
+<li> Send a request to the Mirror API to insert the GDK Account.</li>
+<li> Show the confirmation screen, and close the screen after showing it for a short period of time.</li>
+</ol>
+<h3 id="account-creation-examples">Account creation examples</h3>
+<p>Use the <a href="https://developers.google.com/glass/tools-downloads/client-libraries">client libraries</a> [<strong>TODO</strong>: ADD LINK] for the Mirror API when possible. This makes calling <code>mirror.accounts.insert</code> to create the account easier.</p>
+<h4 id="raw-http-example">Raw HTTP example</h4>
+<p>The example below only shows the URL of the request and an example of the JSON body that it expects. Making raw HTTP requests on behalf of a service account is much more complicated (see <a href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount">Using OAuth 2.0 for Server to Server Applications</a> for the full details), so we recommend that you use one of our Google API <a href="https://developers.google.com/glass/tools-downloads/client-libraries">client libraries</a> [<strong>TODO</strong>: ADD LINK] if possible to make this easier.</p>
+<p>Request method and URL:</p>
+<pre><code>POST https:&#47;&#47;www.googleapis.com&#47;mirror&#47;v1&#47;accounts&#47;{userToken}&#47;com.example.myapp&#47;username%40email.com
+</code></pre>
+<p>Request body:</p>
+<pre><code class="language-json">{
+    "features": ["a", "b", "c"],
+    "userData": [
+        { "key": "realName", "value": "Rusty Shackleford" },
+        { "key": "foo", "value": "bar" }
+    ],
+    "authTokens": [
+        { "type": "your_token_type", "authToken": "zT419Ma3X2pBr0L..." }
+    ]
+}
+</code></pre>
+<p>Replace <code>{userToken}</code> in the request URL with the token that was passed to your authentication URL in step 1 of <a href="#implementing_the_authentication_flow">Implementing the authentication flow</a>.</p>
+<h4 id="java-example">Java Example</h4>
+<p>This example shows how to use the Java client library to call <code>mirror.accounts.insert</code></p>
+<pre><code class="language-java">import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.services.mirror.Mirror;
+import com.google.api.services.mirror.model.Account;
+import com.google.api.services.mirror.model.AuthToken;
+import com.google.common.collect.Lists;
+...
+
+&#47;** Email of the Service Account *&#47;
+private static final String SERVICE_ACCOUNT_EMAIL =
+    "&#60;some-id&#62;@developer.gserviceaccount.com";
+
+&#47;** Path to the Service Account&#39;s Private Key file *&#47;
+private static final String SERVICE_ACCOUNT_PKCS12_FILE_PATH =
+    "&#47;path&#47;to&#47;&#60;public_key_fingerprint&#62;-privatekey.p12";
+
+&#47;** The account type, usually based on your company or app&#39;s package. *&#47;
+private static final String ACCOUNT_TYPE = "com.example.myapp";
+
+&#47;** The Mirror API scopes needed to access the API. *&#47;
+private static final String MIRROR_ACCOUNT_SCOPES =
+    "https:&#47;&#47;www.googleapis.com&#47;auth&#47;glass.thirdpartyauth";
+
+&#47;**
+ * Build and returns a Mirror service object authorized with the service accounts.
+ *
+ * @return Mirror service object that is ready to make requests.
+ *&#47;
+public static Mirror getMirrorService() throws GeneralSecurityException,
+    IOException, URISyntaxException {
+  HttpTransport httpTransport = new NetHttpTransport();
+  JacksonFactory jsonFactory = new JacksonFactory();
+  GoogleCredential credential = new GoogleCredential.Builder()
+      .setTransport(httpTransport)
+      .setJsonFactory(jsonFactory)
+      .setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
+      .setServiceAccountScopes(MIRROR_ACCOUNT_SCOPES)
+      .setServiceAccountPrivateKeyFromP12File(
+          new java.io.File(SERVICE_ACCOUNT_PKCS12_FILE_PATH))
+      .build();
+  Mirror service = new Mirror.Builder(httpTransport, jsonFactory, null)
+      .setHttpRequestInitializer(credential).build();
+  return service;
+}
+
+&#47;**
+ * Creates an account and causes it to be synced up with the user&#39;s Glass.
+ * This example only supports one auth token; modify it if you need to add
+ * more than one, or to add features, user data, or the password field.
+ *
+ * @param mirror the service returned by getMirrorService()
+ * @param userToken the user token sent to your auth callback URL
+ * @param accountName the account name for this particular user
+ * @param authTokenType the type of the auth token (chosen by you)
+ * @param authToken the auth token
+ *&#47;
+public static void createAccount(Mirror mirror, String userToken, String accountName,
+    String authTokenType, String authToken) {
+  try {
+    Account account = new Account();
+    List&#60;AuthToken&#62; authTokens = Lists.newArrayList(
+        new AuthToken().setType(authTokenType).setAuthToken(authToken));
+    account.setAuthTokens(authTokens);
+    mirror.accounts().insert(
+        userToken, ACCOUNT_TYPE, accountName, account).execute();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+</code></pre>
+<h2 id="retrieving-accounts-on-glass">Retrieving Accounts on Glass</h2>
+<p>Retrieving and using <a href="https://developer.android.com/reference/android/accounts/Account.html"><code>Account</code></a> objects on Glass is similar to using the standard Android <a href="https://developer.android.com/reference/android/accounts/AccountManager.html"><code>AccountManager</code></a>.
+1. Declare the following manifest permissions in your <code>AndroidManifest.xml</code> file:
+<code>xml
+&#60;uses-permission android:name="android.permission.GET_ACCOUNTS" &#47;&#62;
+&#60;uses-permission android:name="android.permission.USE_CREDENTIALS" &#47;&#62;
+</code>
+2. Retrieve the Glassware&#8217;s accounts:
+```java
+AccountManager accountManager = AccountManager.get(mContext);
+&#47;&#47; Use your Glassware&#8217;s account type.
+Account[] accounts = accountManager.getAccountsByType(&#8220;com.example&#8221;);</p>
+<p>&#47;&#47; Pick an account from the list of returned accounts.
+<code>
+3. Retrieve an auth token from the `Account`:
+</code>java
+&#47;&#47; Your auth token type.
+final String AUTH<em>TOKEN</em>TYPE = &#8220;oauth2:<a href="https://www.example.com/auth/login">https:&#47;&#47;www.example.com&#47;auth&#47;login</a>&#8221;;</p>
+<p>accountManager.getAuthToken(account, AUTH<em>TOKEN</em>TYPE, null, activity, new AccountManagerCallback() {
+    public void run(AccountManagerFuture future) {
+        try {
+            String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+            &#47;&#47; Use the token.
+        } catch (Exception e) {
+            &#47;&#47; Handle exception.
+        }
+    }
+}, null);
+```</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

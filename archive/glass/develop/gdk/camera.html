@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="camera">Camera</h1>
+<p>You can use the Glass camera to capture images and video and to also display the camera&#8217;s preview stream for a variety of different use cases.</p>
+<h2 id="overview">Overview</h2>
+<p>You have two options for capturing images or video:</p>
+<ul>
+<li>  Calling the built-in camera activity with <a href="https://developer.android.com/reference/android/app/Activity.html#startActivityForResult(android.content.Intent,%20int)"><code>startActivityForResult()</code></a>. Use this option when possible.</li>
+<li>  Building your own logic with the <a href="https://developer.android.com/reference/android/hardware/Camera.html">Android Camera API</a>. Follow these guidelines if you are using this method:
+<ul>
+<li>  Take a picture on a camera button click and a video on a long click, just like Glass does.</li>
+<li>  Indicate to the user whether a picture was taken or a video was recorded.</li>
+<li>  Keep the screen on during capture.</li>
+</ul></li>
+</ul>
+<h2 id="sharing-the-camera-with-the-glass-system">Sharing the camera with the Glass system</h2>
+<p>If your Glassware uses the Android APIs to access the camera, temporarily release the camera when possible if users press the hardware camera button.</p>
+<ol>
+<li> Override the <a href="https://developer.android.com/reference/android/app/Activity.html#onKeyDown(int,%20android.view.KeyEvent)"><code>onKeyDown()</code></a> method in your activity and intercept <a href="https://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_CAMERA"><code>KEYCODE_CAMERA</code></a> to handle camera button presses.</li>
+<li> Release the camera and return <code>false</code> to indicate that you did not consume the event so that the built-in Glass camera starts.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: If you return <code>true</code> from <a href="https://developer.android.com/reference/android/app/Activity.html#onKeyDown(int,%20android.view.KeyEvent)"><code>onKeyDown()</code></a>, your activity consumes the event and the Glass camera doesn&#8217;t start. Do this only if there is no way to interrupt your activity&#8217;s use of the camera (for example, if you are capturing continuous video).</p>
+</blockquote>
+<ol start="3">
+<li>After the image or video capture takes place, Glass returns to your activity, where you can reclaim the camera in <a href="https://developer.android.com/reference/android/app/Activity.html#onResume()"><code>onResume()</code></a>.</li>
+</ol>
+<pre><code class="language-java">@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_CAMERA) {
+        &#47;&#47; Stop the preview and release the camera.
+        &#47;&#47; Execute your logic as quickly as possible
+        &#47;&#47; so the capture happens quickly.
+        return false;
+    } else {
+        return super.onKeyDown(keyCode, event);
+    }
+}
+
+@Override
+protected void onResume() {
+    super.onResume();
+    &#47;&#47; Re-acquire the camera and start the preview.
+}
+</code></pre>
+<h2 id="capturing-images-or-video">Capturing images or video</h2>
+<h3 id="images">Images</h3>
+<p>To capture an image using the built-in Camera Glassware:</p>
+<ol>
+<li> Call <a href="https://developer.android.com/reference/android/app/Activity.html#startActivityForResult(android.content.Intent,%0Aint)"><code>startActivityForResult(Intent, int)</code></a> with the action set as <a href="https://developer.android.com/reference/android/provider/MediaStore.html#ACTION_IMAGE_CAPTURE"><code>ACTION_IMAGE_CAPTURE</code></a>.</li>
+<li> In <a href="https://developer.android.com/reference/android/app/Activity.html#onActivityResult(int,%20int,%20android.content.Intent)"><code>onActivityResult(int, int, android.content.Intent)</code></a>:
+a.  Ensure that the <code>requestCode</code> matches the request code used when starting the image capture intent.
+b.  Ensure that the <code>resultCode</code> matches <a href="https://developer.android.com/reference/android/app/Activity.html#RESULT_OK"><code>RESULT_OK</code></a>.
+c.  Obtain the path to the image&#8217;s thumbnail from the <a href="https://developer.android.com/reference/android/content/Intent.html"><code>Intent</code></a>&#8217;s extra with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#EXTRA_THUMBNAIL_FILE_PATH"><code>EXTRA_THUMBNAIL_FILE_PATH</code></a> [<strong>TODO</strong>: ADD LINK] key, if necessary.
+d.  The path to the full image is available from the <a href="https://developer.android.com/reference/android/content/Intent.html"><code>Intent</code></a>&#8217;s extra with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#EXTRA_PICTURE_FILE_PATH"><code>EXTRA_PICTURE_FILE_PATH</code></a> [<strong>TODO</strong>: ADD LINK] key. When the image capture intent returns control to your Glassware, the image might not be fully written to file. Verify that the image file exists or use a <a href="https://developer.android.com/reference/android/os/FileObserver.html"><code>FileObserver</code></a> to monitor its parent directory. When the full image is available, load the file and use it in your Glassware.</li>
+</ol>
+<pre><code class="language-java">private static final int TAKE_PICTURE_REQUEST = 1;
+
+private void takePicture() {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    startActivityForResult(intent, TAKE_PICTURE_REQUEST);
+}
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == TAKE_PICTURE_REQUEST &#38;&#38; resultCode == RESULT_OK) {
+        String thumbnailPath = data.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
+        String picturePath = data.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
+
+        processPictureWhenReady(picturePath);
+        &#47;&#47; TODO: Show the thumbnail to the user while the full picture is being
+        &#47;&#47; processed.
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
+}
+
+private void processPictureWhenReady(final String picturePath) {
+    final File pictureFile = new File(picturePath);
+
+    if (pictureFile.exists()) {
+        &#47;&#47; The picture is ready; process it.
+    } else {
+        &#47;&#47; The file does not exist yet. Before starting the file observer, you
+        &#47;&#47; can update your UI to let the user know that the application is
+        &#47;&#47; waiting for the picture (for example, by displaying the thumbnail
+        &#47;&#47; image and a progress indicator).
+
+        final File parentDirectory = pictureFile.getParentFile();
+        FileObserver observer = new FileObserver(parentDirectory.getPath(),
+                FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
+            &#47;&#47; Protect against additional pending events after CLOSE_WRITE
+            &#47;&#47; or MOVED_TO is handled.
+            private boolean isFileWritten;
+
+            @Override
+            public void onEvent(int event, String path) {
+                if (!isFileWritten) {
+                    &#47;&#47; For safety, make sure that the file that was created in
+                    &#47;&#47; the directory is actually the one that we&#39;re expecting.
+                    File affectedFile = new File(parentDirectory, path);
+                    isFileWritten = affectedFile.equals(pictureFile);
+
+                    if (isFileWritten) {
+                        stopWatching();
+
+                        &#47;&#47; Now that the file is ready, recursively call
+                        &#47;&#47; processPictureWhenReady again (on the UI thread).
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                processPictureWhenReady(picturePath);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+        observer.startWatching();
+    }
+}
+</code></pre>
+<h3 id="videos">Videos</h3>
+<p>To capture a video using the built-in Camera Glassware:</p>
+<ol>
+<li> Call <a href="https://developer.android.com/reference/android/app/Activity.html#startActivityForResult(android.content.Intent,%0Aint)"><code>startActivityForResult(Intent, int)</code></a> with the action set as <a href="https://developer.android.com/reference/android/provider/MediaStore.html#ACTION_VIDEO_CAPTURE"><code>ACTION_VIDEO_CAPTURE</code></a>.</li>
+<li> In <a href="https://developer.android.com/reference/android/app/Activity.html#onActivityResult(int,%20int,%20android.content.Intent)"><code>onActivityResult(int, int, android.content.Intent)</code></a>:
+<ol>
+<li> Ensure that the <code>requestCode</code> matches the request code used when starting the video capture intent.</li>
+<li> Ensure that the <code>resultCode</code> matches <a href="https://developer.android.com/reference/android/app/Activity.html#RESULT_OK"><code>RESULT_OK</code></a>.</li>
+<li> Obtain the path to the video&#8217;s thumbnail from the <a href="https://developer.android.com/reference/android/content/Intent.html"><code>Intent</code></a>&#8217;s extra with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#EXTRA_THUMBNAIL_FILE_PATH"><code>EXTRA_THUMBNAIL_FILE_PATH</code></a> [<strong>TODO</strong>: ADD LINK] key to display a preview if necessary.</li>
+<li> The path to the recorded video is available from the <a href="https://developer.android.com/reference/android/content/Intent.html"><code>Intent</code></a>&#8217;s extra with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#EXTRA_VIDEO_FILE_PATH"><code>EXTRA_VIDEO_FILE_PATH</code></a> [<strong>TODO</strong>: ADD LINK] key.</li>
+</ol></li>
+</ol>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

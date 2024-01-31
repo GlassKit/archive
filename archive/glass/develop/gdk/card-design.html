@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="card-design">Card Design</h1>
+<p>This document goes over how to follow Glass style and implement common UI best practices when using the GDK.</p>
+<h2 id="glass-theme">Glass theme</h2>
+<p>Glass applies a standard theme to your Glassware, so it stays consistent with the rest of the user interface. The theme has the following characteristics:</p>
+<ul>
+<li>  Uses Roboto typeface</li>
+<li>  Displays activities full-screen with no status bar or action bar</li>
+<li>  Applies solid, black background</li>
+</ul>
+<p>To apply the Glass theme, don&#8217;t declare a theme in your Android Manifest.</p>
+<blockquote>
+<p><strong>Note</strong>: ADT and Android Studio usually assign a theme automatically, even if you specify no theme, so remove the <code>android:theme</code> property from your manifest after creating a project.</p>
+</blockquote>
+<p>If you have a custom style for parts of your Glassware and want the default Glass theme for everything else, inherit from <code>Theme.DeviceDefault</code> with the <code>parent</code> attribute:</p>
+<pre><code class="language-xml">&#60;resources&#62;
+    &#60;style name="CustomTheme" parent="@android:style&#47;Theme.DeviceDefault"&#62;
+        &#60;!-- Theme customization goes here. --&#62;
+    &#60;&#47;style&#62;
+&#60;&#47;resources&#62;
+</code></pre>
+<p>See the Android developer guide on <a href="http://developer.android.com/guide/topics/ui/themes.html">Styles and Themes</a> for more information about creating themes.</p>
+<h2 id="glass-styled-cards">Glass-styled cards</h2>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder"><code>CardBuilder</code></a> [<strong>TODO</strong>: ADD LINK] class creates well-formed cards given a set of properties. Use the layouts provided by <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout"><code>CardBuilder.Layout</code></a> [<strong>TODO</strong>: ADD LINK] whenever possible so that your content looks and feels like other content on Glass.</p>
+<p>To use <code>CardBuilder</code>:</p>
+<ol>
+<li> Create an instance of <code>CardBuilder</code>, giving it your desired layout from <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout"><code>CardBuilder.Layout</code></a> [<strong>TODO</strong>: ADD LINK].</li>
+<li> Set properties of the card, such as the text, footnote, and timestamp.</li>
+<li> Call <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#getView()"><code>CardBuilder.getView()</code></a> [<strong>TODO</strong>: ADD LINK] to convert the card to an Android <a href="http://developer.android.com/reference/android/view/View.html"><code>View</code></a>, or <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#getRemoteViews()"><code>CardBuilder.getRemoteViews()</code></a> [<strong>TODO</strong>: ADD LINK] to convert it to a <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> object.</li>
+<li> Use the <code>View</code> in your activities, layouts, or in a <a href="https://developers.google.com/glass/develop/gdk/card-design#creating_scrolling_cards_in_activities"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK], or use the <code>RemoteViews</code> in a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> [<strong>TODO</strong>: ADD LINK].</li>
+</ol>
+<h3 id="common-ui-features">Common UI features</h3>
+<p>Many of the layouts provided by <code>CardBuilder</code> support the common user interface features described below. See the documentation of the individual layouts in <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout"><code>CardBuilder.Layout</code></a> [<strong>TODO</strong>: ADD LINK] for a list of the features supported by each type of card.</p>
+<h4 id="attribution-icon">Attribution icon</h4>
+<p>The attribution icon is an optional 36 × 36 pixel icon that appears on the bottom-right corner of a card and to the right of the timestamp. Set this icon by calling <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#setAttributionIcon(int)"><code>CardBuilder.setAttributionIcon()</code></a> [<strong>TODO</strong>: ADD LINK] to identify your application, especially on live cards so a user can quickly glance and see the source of the information on that card.</p>
+<h4 id="stack-indicator">Stack indicator</h4>
+<p>The stack indicator, controlled by <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#showStackIndicator(boolean)"><code>CardBuilder.showStackIndicator()</code></a> [<strong>TODO</strong>: ADD LINK], is a corner fold that appears on the top-right corner of a card. Use this as a visual indicator that your card represents a bundle of other cards that the user can tap directly into.</p>
+<p><img src="static/card_corner.gif" alt="" /></p>
+<pre><code class="language-java">View view = new CardBuilder(context, CardBuilder.Layout.TEXT)
+    .setText("A stack indicator can be added to the corner of a card...")
+    .setAttributionIcon(R.drawable.ic_smile)
+    .showStackIndicator(true)
+    .getView();
+</code></pre>
+<h3 id="layouts">Layouts</h3>
+<p>The following examples show the layouts that are available using the <code>CardBuilder</code>.</p>
+<blockquote>
+<p><strong>Note</strong>: Layouts with full-bleed images can have up to eight images in the mosaic, while column layouts can only have up to five.</p>
+</blockquote>
+<h4 id="and"><code>TEXT</code> and <code>TEXT_FIXED</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#TEXT"><code>CardBuilder.Layout.TEXT</code></a> [<strong>TODO</strong>: ADD LINK] layout shows full-bleed text with an optional image mosaic in the background. The text dynamically resizes to best fit the available space. <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#TEXT_FIXED"><code>CardBuilder.Layout.TEXT_FIXED</code></a> [<strong>TODO</strong>: ADD LINK] is similar but fixes its text to a smaller size.</p>
+<p><img src="static/card_text.png" alt="" />
+<img src="static/card_text_with_images.png" alt="" />
+<img src="static/card_text_fixed.png" alt="" /></p>
+<pre><code class="language-java">View view1 = new CardBuilder(context, CardBuilder.Layout.TEXT)
+    .setText("This is the TEXT layout. The text size will adjust dynamically.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .getView();
+View view2 = new CardBuilder(context, CardBuilder.Layout.TEXT)
+    .setText("You can also add images to the background of a TEXT card.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .addImage(R.drawable.image1)
+    .addImage(R.drawable.image2)
+    .addImage(R.drawable.image3)
+    .addImage(R.drawable.image4)
+    .addImage(R.drawable.image5)
+    .getView();
+View view3 = new CardBuilder(context, CardBuilder.Layout.TEXT_FIXED)
+    .setText("This is the TEXT_FIXED layout. The text size is always the same.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .getView();
+</code></pre>
+<h4 id="and-1"><code>COLUMNS</code> and <code>COLUMNS_FIXED</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#COLUMNS"><code>CardBuilder.Layout.COLUMNS</code></a> [<strong>TODO</strong>: ADD LINK] layout shows an image mosaic or icon on the left side of the card and text on the right side. The text is dynamically sized to best fit the available space. To keep the text size fixed, use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#COLUMNS_FIXED"><code>CardBuilder.Layout.COLUMNS_FIXED</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p><img src="card_columns.png" alt="" />
+<img src="card_columns_icon.png" alt="" />
+<img src="card_columns_fixed.png" alt="" /></p>
+<pre><code class="language-java">View view1 = new CardBuilder(context, CardBuilder.Layout.COLUMNS)
+    .setText("This is the COLUMNS layout with dynamic text.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .addImage(R.drawable.image1)
+    .addImage(R.drawable.image2)
+    .addImage(R.drawable.image3)
+    .addImage(R.drawable.image4)
+    .addImage(R.drawable.image5)
+    .getView();
+View view2 = new CardBuilder(context, CardBuilder.Layout.COLUMNS)
+    .setText("You can even put a centered icon on a COLUMNS card instead of a mosaic.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .setIcon(R.drawable.ic_wifi)
+    .getView();
+View view3 = new CardBuilder(context, CardBuilder.Layout.COLUMNS_FIXED)
+    .setText("This is the COLUMNS_FIXED layout. The text size is always the same.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .addImage(R.drawable.image1)
+    .addImage(R.drawable.image2)
+    .addImage(R.drawable.image3)
+    .addImage(R.drawable.image4)
+    .addImage(R.drawable.image5)
+    .getView();
+</code></pre>
+<h4 id="section"><code>CAPTION</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#CAPTION"><code>CardBuilder.Layout.CAPTION</code></a> [<strong>TODO</strong>: ADD LINK] layout has an image mosaic in the background and brief caption text aligned at the bottom of the card. An icon can also be placed next to the caption to represent, for example, the identity of a person associated with the card&#8217;s content.</p>
+<p><img src="static/card_caption.png" alt="" />
+<img src="static/card_caption_icon.png" alt="" /></p>
+<p><strong>Figure 1</strong>: (background image by <a href="http://www.photoeverywhere.co.uk/">photoeverywhere.co.uk</a>, cropped)</p>
+<pre><code class="language-java">View view1 = new CardBuilder(context, CardBuilder.Layout.CAPTION)
+    .setText("The caption layout.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .addImage(R.drawable.beach)
+    .setAttributionIcon(R.drawable.ic_smile)
+    .getView();
+
+View view2 = new CardBuilder(context, CardBuilder.Layout.CAPTION)
+    .setText("The caption layout with an icon.")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .addImage(R.drawable.beach)
+    .setIcon(R.drawable.ic_avatar)
+    .setAttributionIcon(R.drawable.ic_smile)
+    .getView();
+</code></pre>
+<h4 id="section-1"><code>TITLE</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#TITLE"><code>CardBuilder.Layout.TITLE</code></a> [<strong>TODO</strong>: ADD LINK] layout has an image mosaic in the background with a centered title and optional icon on the bottom of the card. This layout is often used to represent contacts or share targets. Footnote and timestamp are not supported on this layout.</p>
+<p><img src="static/card_title.png" alt="" /></p>
+<pre><code class="language-java">View view = new CardBuilder(context, CardBuilder.Layout.TITLE)
+    .setText("TITLE Card")
+    .setIcon(R.drawable.ic_phone)
+    .addImage(R.drawable.beach)
+    .getView();
+</code></pre>
+<h4 id="section-2"><code>AUTHOR</code></h4>
+<p>Use the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#AUTHOR"><code>CardBuilder.Layout.AUTHOR</code></a> [<strong>TODO</strong>: ADD LINK] layout to display a message or conversation where the focus is on the author. It supports an image mosaic in the background, an icon used as the author&#8217;s avatar, and a heading and subheading where you can list identifying information.</p>
+<p><img src="static/card_author.png" alt="" /></p>
+<pre><code class="language-java">View view = new CardBuilder(context, CardBuilder.Layout.AUTHOR)
+    .setText("The AUTHOR layout lets you display a message or conversation "
+            + " with a focus on the author.")
+    .setIcon(R.drawable.ic_avatar)
+    .setHeading("Joe Lastname")
+    .setSubheading("Mountain View, California")
+    .setFootnote("This is the footnote")
+    .setTimestamp("just now")
+    .getView();
+</code></pre>
+<h4 id="section-3"><code>MENU</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#MENU"><code>CardBuilder.Layout.MENU</code></a> [<strong>TODO</strong>: ADD LINK] layout looks like a standard Glass menu. It has a centered icon and title and an optional footnote. Use this layout for confirmation screens (transitioning from &#8220;Deleting&#8221; to &#8220;Deleted&#8221; after the user selects a menu item, for example). If you need a real menu, you should use a standard options menu instead.</p>
+<p><img src="static/card_menu.png" alt="" /></p>
+<pre><code class="language-java">View view = new CardBuilder(context, CardBuilder.Layout.MENU)
+    .setText("MENU layout")
+    .setIcon(R.drawable.ic_phone)
+    .setFootnote("Optional menu description")
+    .getView();
+</code></pre>
+<h4 id="section-4"><code>EMBED_INSIDE</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#EMBED_INSIDE"><code>CardBuilder.Layout.EMBED_INSIDE</code></a> [<strong>TODO</strong>: ADD LINK] layout embeds a custom layout XML of your own design into the standard Glass card template. This lets you design a custom UI for your application but still have correct placement of a card&#8217;s footnote, timestamp, attribution icon, and stack indicator if they are needed.</p>
+<p>After calling <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#getView()"><code>CardBuilder.getView()</code></a> [<strong>TODO</strong>: ADD LINK], use <a href="http://developer.android.com/reference/android/view/View.html#findViewById(int)"><code>findViewById()</code></a> on the result to access the views inside your embedded layout. Likewise, if you call <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder#getRemoteViews()"><code>CardBuilder.getRemoteViews()</code></a> [<strong>TODO</strong>: ADD LINK], you can manipulate your embedded layout&#8217;s views by passing their IDs directly into the <a href="http://developer.android.com/reference/android/widget/RemoteViews.html"><code>RemoteViews</code></a> setter methods.</p>
+<p><img src="static/card_embed_inside_diagram.png" alt="" /></p>
+<pre><code class="language-java">View view = new CardBuilder(context, CardBuilder.Layout.EMBED_INSIDE)
+    .setEmbeddedLayout(R.layout.food_table)
+    .setFootnote("Foods you tracked")
+    .setTimestamp("today")
+    .getView();
+TextView textView1 = (TextView) view.findViewById(R.id.text_view_1);
+textView1.setText("Water");
+&#47;&#47; ...and so on
+</code></pre>
+<p>For a more detailed example, see the GitHub <a href="https://github.com/googleglass/gdk-apidemo-sample">ApiDemo project</a> [<strong>TODO</strong>: ADD LINK].</p>
+<h4 id="section-5"><code>ALERT</code></h4>
+<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder.Layout#ALERT"><code>CardBuilder.Layout.ALERT</code></a> [<strong>TODO</strong>: ADD LINK] layout contains a large centered icon with a primary message and footnote. Use this layout in a <a href="https://developer.android.com/reference/android/app/Dialog.html"><code>Dialog</code></a> to show an important informational message, warning, or error in your Glassware.</p>
+<blockquote>
+<p><strong>Note</strong>: use <code>ic_cloud_sad_150.png</code> for network connectivity alerts and <code>ic_warning_150.png</code> for generic warnings. Download these assets from <a href="../../menu_icons.zip">Glass menu icons</a>.</p>
+</blockquote>
+<p><img src="static/card_alert_cloud.png" alt="" />
+<img src="static/card_alert_warning.png" alt="" /></p>
+<p>The following example shows an implementation of <code>AlertDialog</code> and dismisses the card and opens the WiFi settings when the user taps on the card:</p>
+<ol>
+<li> Create a class that extends <code>Dialog</code>.</li>
+<li> Create the card using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder"><code>CardBuilder</code></a> [<strong>TODO</strong>: ADD LINK] with the <code>CardBuilder.Layout.ALERT</code> layout and then set the content view with this card.</li>
+<li> (Optional) Create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] to handle user gestures on this card.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: The swipe down gesture on <a href="https://developer.android.com/reference/android/app/Dialog.html"><code>Dialog</code></a> objects automatically plays the appropriate sound: <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/media/Sounds#DISMISSED"><code>Sounds.DISMISSED</code></a> [<strong>TODO</strong>: ADD LINK] if the dialog is cancelable, or <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/media/Sounds#DISALLOWED"><code>Sounds.DISALLOWED</code></a> [<strong>TODO</strong>: ADD LINK] if it is not.</p>
+</blockquote>
+<pre><code class="language-java">public class AlertDialog extends Dialog {
+
+    private final DialogInterface.OnClickListener mOnClickListener;
+    private final AudioManager mAudioManager;
+    private final GestureDetector mGestureDetector;
+
+    &#47;**
+     * Handles the tap gesture to call the dialog&#39;s
+     * onClickListener if one is provided.
+     *&#47;
+    private final GestureDetector.BaseListener mBaseListener =
+        new GestureDetector.BaseListener() {
+
+        @Override
+        public boolean onGesture(Gesture gesture) {
+            if (gesture == Gesture.TAP) {
+                mAudioManager.playSoundEffect(Sounds.TAP);
+                if (mOnClickListener != null) {
+                    &#47;&#47; Since Glass dialogs do not have buttons,
+                    &#47;&#47; the index passed to onClick is always 0.
+                    mOnClickListener.onClick(AlertDialog.this, 0);
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+
+    public AlertDialog(Context context, int iconResId,
+                       int textResId, int footnoteResId,
+                       DialogInterface.OnClickListener onClickListener) {
+        super(context);
+
+        mOnClickListener = onClickListener;
+        mAudioManager =
+            (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mGestureDetector =
+            new GestureDetector(context).setBaseListener(mBaseListener);
+
+        setContentView(new CardBuilder(context, CardBuilder.Layout.ALERT)
+                .setIcon(iconResId)
+                .setText(textResId)
+                .setFootnote(footnoteResId)
+                .getView());
+    }
+
+    &#47;** Overridden to let the gesture detector handle a possible tap event. *&#47;
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        return mGestureDetector.onMotionEvent(event)
+            || super.onGenericMotionEvent(event);
+    }
+}
+</code></pre>
+<ol start="4">
+<li> (Optional) In your activity, implement an <a href="https://developer.android.com/reference/android/content/DialogInterface.OnClickListener.html"><code>OnClickListener</code></a> to handle any additional flows when the user taps. For more information on starting settings activities like WiFi, see <a href="starting-glassware.html#starting_settings">Starting settings</a>.</li>
+<li> Call the <code>AlertDialog</code> constructor to display the alert card.</li>
+</ol>
+<pre><code class="language-java">public class MyActivity extends Activity {
+    ...
+    private final DialogInterface.OnClickListener mOnClickListener =
+            new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        &#47;&#47; Open WiFi Settings
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+            };
+
+    @Override
+    protected void onCreate(Bundle bundle) {
+        ...
+
+        new AlertDialog(context, R.drawable.ic_cloud_sad_150, R.string.alert_text,
+            R.string.alert_footnote_text, mOnClickListener).show();
+
+        ...
+    }
+}
+</code></pre>
+<h2 id="xml-layouts">XML layouts</h2>
+<p>Here are two basic card layouts that you can use if the CardBuilder class does not meet your needs.</p>
+<h3 id="main-layout">Main layout</h3>
+<p>This layout defines the standard padding and footer for a card. Put your own views in the empty <code>RelativeLayout</code>.</p>
+<blockquote>
+<p><strong>Editor&#8217;s note</strong>: There used to be some sort of page here, I presume one from the Glassware Flow Designer which is now defunct, that was overlayed with the below image:</p>
+</blockquote>
+<p><img src="static/main-template.png" alt="" /></p>
+<pre><code class="language-xml">&#60;?xml version="1.0" encoding="utf-8"?&#62;
+&#60;FrameLayout xmlns:android="http:&#47;&#47;schemas.android.com&#47;apk&#47;res&#47;android"
+    xmlns:tools="http:&#47;&#47;schemas.android.com&#47;tools"
+    android:id="@+id&#47;layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    &#62;
+
+    &#60;RelativeLayout
+        android:id="@+id&#47;body_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen&#47;glass_card_body_height"
+        android:layout_marginLeft="@dimen&#47;glass_card_margin"
+        android:layout_marginTop="@dimen&#47;glass_card_margin"
+        android:layout_marginRight="@dimen&#47;glass_card_margin"
+        tools:ignore="UselessLeaf"
+        &#62;
+
+        &#60;!-- Put your widgets inside this RelativeLayout. --&#62;
+
+    &#60;&#47;RelativeLayout&#62;
+
+    &#60;LinearLayout
+        android:id="@+id&#47;footer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_marginLeft="@dimen&#47;glass_card_margin"
+        android:layout_marginBottom="@dimen&#47;glass_card_footer_margin"
+        android:layout_marginRight="@dimen&#47;glass_card_margin"
+        android:orientation="horizontal"
+        &#62;
+
+        &#60;!-- The footer view will grow to fit as much content as possible while the
+             timestamp view keeps a fixed width. If the footer text is too long, it
+             will be ellipsized with a 40px margin between it and the timestamp. --&#62;
+
+        &#60;TextView
+            android:id="@+id&#47;footer"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr&#47;textAppearanceSmall"
+            &#47;&#62;
+
+        &#60;TextView
+            android:id="@+id&#47;timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen&#47;glass_card_margin"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr&#47;textAppearanceSmall"
+            &#47;&#62;
+
+    &#60;&#47;LinearLayout&#62;
+
+&#60;&#47;FrameLayout&#62;
+</code></pre>
+<h3 id="left-column-layout">Left column layout</h3>
+<p>This defines a 240px left column and 400px right column in the form of two <code>RelativeLayout</code>s that you can put your views into.</p>
+<blockquote>
+<p><strong>Editor&#8217;s note</strong>: Same thing here. The following image was overlayed:</p>
+</blockquote>
+<p><img src="static/left-column-template.png" alt="" /></p>
+<pre><code class="language-xml">&#60;?xml version="1.0" encoding="utf-8"?&#62;
+&#60;RelativeLayout xmlns:android="http:&#47;&#47;schemas.android.com&#47;apk&#47;res&#47;android"
+    xmlns:tools="http:&#47;&#47;schemas.android.com&#47;tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    &#62;
+
+    &#60;RelativeLayout
+        android:id="@+id&#47;left_column"
+        android:layout_width="@dimen&#47;glass_card_left_column_width"
+        android:layout_height="match_parent"
+        &#62;
+
+        &#60;!-- Put widgets for the left column inside this RelativeLayout. --&#62;
+
+    &#60;&#47;RelativeLayout&#62;
+
+    &#60;RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen&#47;glass_card_body_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen&#47;glass_card_two_column_margin"
+        android:layout_marginRight="@dimen&#47;glass_card_margin"
+        android:layout_marginTop="@dimen&#47;glass_card_margin"
+        android:layout_toRightOf="@+id&#47;left_column"
+        tools:ignore="UselessLeaf"
+        &#62;
+
+        &#60;!-- Put widgets for the right column inside this RelativeLayout. --&#62;
+
+    &#60;&#47;RelativeLayout&#62;
+
+    &#60;LinearLayout
+        android:id="@+id&#47;footer_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="@dimen&#47;glass_card_footer_margin"
+        android:layout_marginLeft="@dimen&#47;glass_card_two_column_margin"
+        android:layout_marginRight="@dimen&#47;glass_card_margin"
+        android:layout_toRightOf="@+id&#47;left_column"
+        android:orientation="horizontal"
+        &#62;
+
+        &#60;!--
+             The footer view will grow to fit as much content as possible while the
+             timestamp view keeps a fixed width. If the footer text is too long, it
+             will be ellipsized with a 40px margin between it and the timestamp.
+        --&#62;
+
+        &#60;TextView
+            android:id="@+id&#47;footer"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr&#47;textAppearanceSmall"
+            &#47;&#62;
+
+        &#60;TextView
+            android:id="@+id&#47;timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen&#47;glass_card_margin"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr&#47;textAppearanceSmall"
+            &#47;&#62;
+
+    &#60;&#47;LinearLayout&#62;
+
+&#60;&#47;RelativeLayout&#62;
+</code></pre>
+<h3 id="standard-dimensions">Standard dimensions</h3>
+<p>Use this file in conjunction with the previous layouts or your own layouts to to adhere to standard Glass style. Create this file as <code>res&#47;values&#47;dimens.xml</code> in your Android project.</p>
+<pre><code class="language-xml">&#60;?xml version="1.0" encoding="utf-8"?&#62;
+
+&#60;resources&#62;
+
+    &#60;!-- The recommended margin for the top, left, and right edges of a card. --&#62;
+    &#60;dimen name="glass_card_margin"&#62;40px&#60;&#47;dimen&#62;
+
+    &#60;!-- The recommended margin between the bottom of the card and the footer. This is
+         an adjusted value so that the baseline of the text in the footer sits 40px
+         from the bottom of the card, matching the other margins. --&#62;
+    &#60;dimen name="glass_card_footer_margin"&#62;33px&#60;&#47;dimen&#62;
+
+    &#60;!-- The recommended margin for the left column of the two-column card. --&#62;
+    &#60;dimen name="glass_card_two_column_margin"&#62;30px&#60;&#47;dimen&#62;
+
+    &#60;!-- The maximum height of the body content inside a card. --&#62;
+    &#60;dimen name="glass_card_body_height"&#62;240px&#60;&#47;dimen&#62;
+
+    &#60;!-- The width of the left column in the two-column layout. --&#62;
+    &#60;dimen name="glass_card_left_column_width"&#62;240px&#60;&#47;dimen&#62;
+
+&#60;&#47;resources&#62;
+</code></pre>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

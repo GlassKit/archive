@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="gesturedetector">GestureDetector</h1>
+<p>Added in API level XE12</p>
+<p>A gesture detector optimized to recognize touch gestures for the touchpad.</p>
+<p>There are discrete gesture listeners (e.g., <a href="GestureDetector.BaseListener"><code>GestureDetector.BaseListener</code></a>, <a href="GestureDetector.FingerListener"><code>GestureDetector.FingerListener</code></a>) and continuous gesture listeners, (e.g., <a href="GestureDetector.ScrollListener"><code>GestureDetector.ScrollListener</code></a>, <a href="GestureDetector.OneFingerScrollListener"><code>GestureDetector.OneFingerScrollListener</code></a>, <a href="GestureDetector.TwoFingerScrollListener"><code>GestureDetector.TwoFingerScrollListener</code></a>).</p>
+<p>For more information, see the <a href="/archive/glass/develop/gdk/touch">Touch gestures</a> developer guide.</p>
+<h3 id="general-usage">General usage</h3>
+<ol>
+<li> Implement any desired listener interfaces and set them on the <code>GestureDetector</code>.</li>
+<li> Override input event callbacks such as <a href="http://developer.android.com/reference/android/app/Activity.html#onGenericMotionEvent(android.view.MotionEvent)"><code>onGenericMotionEvent(MotionEvent)</code></a> or <a href="http://developer.android.com/reference/android/view/View.html#dispatchGenericFocusedEvent(android.view.MotionEvent)"><code>dispatchGenericFocusedEvent(MotionEvent)</code></a> and pass the <a href="http://developer.android.com/reference/android/view/MotionEvent.html"><code>MotionEvent</code></a> to the gesture detector&#8217;s <a href="#onMotionEvent(android.view.MotionEvent)"><code>onMotionEvent(MotionEvent)</code></a> method to process the event.</li>
+<li>Handle the event appropriately in your gesture detector listeners.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: When implementing the <code>onXXX</code> methods for listeners, set the return value to <code>true</code> only if you do not want to dispatch the <a href="http://developer.android.com/reference/android/view/MotionEvent.html"><code>MotionEvent</code></a> to any other listening entities in the input dispatch pipeline.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Nested Classes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>interface</td>
+<td><a href="GestureDetector.BaseListener">GestureDetector.BaseListener</a></td>
+<td>Receives detection results.</td>
+</tr>
+<tr>
+<td>interface</td>
+<td><a href="GestureDetector.FingerListener">GestureDetector.FingerListener</a></td>
+<td>This listener reports when the detected finger count changes on the touchpad.</td>
+</tr>
+<tr>
+<td>interface</td>
+<td><a href="GestureDetector.OneFingerScrollListener">GestureDetector.OneFingerScrollListener</a></td>
+<td>This listener receives continuous one finger horizontal scrolling events.</td>
+</tr>
+<tr>
+<td>interface</td>
+<td><a href="GestureDetector.ScrollListener">GestureDetector.ScrollListener</a></td>
+<td>This listener receives continuous horizontal scrolling events independent of the finger count.</td>
+</tr>
+<tr>
+<td>interface</td>
+<td><a href="GestureDetector.TwoFingerScrollListener">GestureDetector.TwoFingerScrollListener</a></td>
+<td>This listener receives continuous two finger horizontal scrolling events.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Constructors</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#GestureDetector(android.content.Context)">GestureDetector</a>(<a href="https://developer.android.com/reference/android/content/Context.html">Context</a> context)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>static boolean</td>
+<td><a href="#isForward(com.google.android.glass.touchpad.Gesture)">isForward</a>(<a href="Gesture">Gesture</a> gesture)</td>
+</tr>
+<tr>
+<td>static boolean</td>
+<td><a href="#isForward(com.google.android.glass.touchpad.Gesture)">isForward</a>(float deltaX)</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td><a href="#onMotionEvent(android.view.MotionEvent)">onMotionEvent</a>(<a href="https://developer.android.com/reference/android/view/MotionEvent.html">MotionEvent</a> event)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setAlwaysConsumeEvents(boolean)">setAlwaysConsumeEvents</a>(boolean enabled)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setBaseListener(com.google.android.glass.touchpad.GestureDetector.BaseListener)">setBaseListener</a>(<a href="GestureDetector.BaseListener">GestureDetector.BaseListener</a> listener)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setFingerListener(com.google.android.glass.touchpad.GestureDetector.FingerListener)">setFingerListener</a>(<a href="GestureDetector.FingerListener">GestureDetector.FingerListener</a> listener)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setOneScrollFingerListener(com.google.android.glass.touchpad.GestureDetector.OneFingerScrollListener)">setOneFingerScrollListener</a>(<a href="GestureDetector.OneFingerScrollListener">GestureDetector.OneFingerScrollListener</a> listener)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setScrollListener(com.google.android.glass.touchpad.GestureDetector.ScrollListener)">setScrollListener</a>(<a href="GestureDetector.ScrollListener">GestureDetector.ScrollListener</a> listener)</td>
+</tr>
+<tr>
+<td><a href="GestureDetector">GestureDetector</a></td>
+<td><a href="#setTwoFingerScrollListener(com.google.android.glass.touchpad.GestureDetector.TwoFingerScrollListener)">setTwoFingerScrollListener</a>(<a href="GestureDetector.TwoFingerScrollListener">GestureDetector.TwoFingerScrollListener</a> listener)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-constructors">Public Constructors</h2>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorcontextcontext">public <strong>GestureDetector</strong> (<a href="https://developer.android.com/reference/android/content/Context.html">Context</a> context) </h4>
+<h2 id="public-methods">Public Methods</h2>
+<p>Added in API level XE16</p>
+<h4 id="public-static-booleanisforwardgesturegesture">public static boolean <strong>isForward</strong> (<a href="Gesture">Gesture</a> gesture) </h4>
+<p>Returns <code>true</code> if the given gesture corresponds to forward motion on the touchpad.</p>
+<p>This method only makes sense for lateral swipes and throws an exception if called on other gestures.</p>
+<p>Added in API level XE16</p>
+<h4 id="public-static-booleanisforwardfloat-deltax">public static boolean <strong>isForward</strong> (float deltaX) </h4>
+<p>Returns <code>true</code> if the given displacement corresponds to forward motion on the touchpad.</p>
+<p>Added in API level XE12</p>
+<h4 id="public-booleanonmotioneventmotioneventevent">public boolean <strong>onMotionEvent</strong> (<a href="https://developer.android.com/reference/android/view/MotionEvent.html">MotionEvent</a> event) </h4>
+<p>Processes a motion event, returning <code>true</code> if events should always be consumed or if a gesture was detected.</p>
+<h5 id="returns">Returns</h5>
+<ul>
+<li>  reflects whether touch event is consumed</li>
+</ul>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorsetalwaysconsumeeventsboolean-enabled">public <a href="GestureDetector">GestureDetector</a> <strong>setAlwaysConsumeEvents</strong> (boolean enabled) </h4>
+<p>Sets if the gesture detector should consume events passed to <a href="GestureDetector#onMotionEvent(android.view.MotionEvent)"><code>onMotionEvent(MotionEvent)</code></a>, regardless of whether they were actually handled.</p>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorsetbaselistenergesturedetector.baselistenerlistener">public <a href="GestureDetector">GestureDetector</a> <strong>setBaseListener</strong> (<a href="GestureDetector.BaseListener">GestureDetector.BaseListener</a> listener) </h4>
+<p>Sets the basic gesture listener.</p>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorsetfingerlistenergesturedetector.fingerlistenerlistener">public <a href="GestureDetector">GestureDetector</a> <strong>setFingerListener</strong> (<a href="GestureDetector.FingerListener">GestureDetector.FingerListener</a> listener) </h4>
+<p>Sets the finger listener.</p>
+<p>Added in API level XE21</p>
+<h4 id="publicgesturedetectorsetonefingerscrolllistenergesturedetector.onefingerscrolllistenerlistener">public <a href="GestureDetector">GestureDetector</a> <strong>setOneFingerScrollListener</strong> (<a href="GestureDetector.OneFingerScrollListener">GestureDetector.OneFingerScrollListener</a> listener) </h4>
+<p>Sets the listener that detects horizontal and one finger scrolling.</p>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorsetscrolllistenergesturedetector.scrolllistenerlistener">public <a href="GestureDetector">GestureDetector</a> <strong>setScrollListener</strong> (<a href="GestureDetector.ScrollListener">GestureDetector.ScrollListener</a> listener) </h4>
+<p>Sets the listener that detects horizontal scrolling independent of the finger count.</p>
+<p>Added in API level XE12</p>
+<h4 id="publicgesturedetectorsettwofingerscrolllistenergesturedetector.twofingerscrolllistenerlistener">public <a href="GestureDetector">GestureDetector</a> <strong>setTwoFingerScrollListener</strong> (<a href="GestureDetector.TwoFingerScrollListener">GestureDetector.TwoFingerScrollListener</a> listener) </h4>
+<p>Sets the listener that detects horizontal and two finger scrolling.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

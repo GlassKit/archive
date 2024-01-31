@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="getting-started">Getting Started</h1>
+<p>Getting started with your Glass is fairly complicated, but don&#8217;t let it phase you! Below is an <strong><em>incomplete</em></strong> tutorial on how to get your Glass up and running.</p>
+<h2 id="installing-xe24">Installing XE24</h2>
+<p>This is a bit confusing as the instructions have changed over the years, and practically every revision recently doesn&#8217;t really work. The instructions on <a href="https://web.archive.org/web/20221001235129/https://support.google.com/glass/answer/9649198?hl=en">this page</a> are a great starter, but some things don’t work. Here’s a (hopefully) decent walkthrough.</p>
+<h2 id="android-studio-google-usb-driver">Android Studio + Google USB Driver</h2>
+<ol>
+<li>Make sure to have Android Studio installed</li>
+<li>In the <code>tools</code> menu of Studio, go to the SDK manager and select the <strong>SDK Tools</strong> tab.</li>
+<li>Select the checkbox next to <strong>Google USB Driver</strong> and then click <strong>Apply</strong> and finally <strong>OK</strong>.</li>
+<li>Reboot the computer to make sure that it&#8217;s installed.</li>
+</ol>
+<h2 id="allow-unsigned-drivers">Allow Unsigned Drivers</h2>
+<p>This will allow us to temporarily disable driver signature enforcement. This only works in Windows.
+1. Click the <strong>Start</strong> button, hold <code>Shift</code> and click <code>Restart</code>
+2. Once it reboots, go to <strong>Troubleshoot &#62; Advanced options &#62; Startup settings &#62; Restart</strong>
+3. Press <code>F7</code> to disable driver signature enforcement
+4. Open CMD as an administrator
+5. Type <code>bcdedit &#47;set testsigning on</code> and press <strong>Enter</strong></p>
+<h2 id="editing-the-driver">Editing the Driver</h2>
+<p>I would recommend following <a href="https://web.archive.org/web/20230803213234/https://jeffzzq.scribe.rip/using-google-glass-in-2020-5f0a01188e6e">this tutorial</a> for the rest of the process.</p>
+<blockquote>
+<p>You must edit the driver in <em>both</em> regular mode and fastboot; otherwise <code>adb</code> will not recognize the device.</p>
+</blockquote>
+<h2 id="entering-fastboot">Entering Fastboot</h2>
+<p>To enter fastboot, you must enter Recovery Mode by holding down the <strong>camera button</strong>, tapping the <strong>power button</strong> <em>once</em>, and then continuing to hold down the <strong>camera button</strong> for 10 seconds. Once you do this, you will see a menu with 4 options, but we want to choose <strong>Reboot into fastboot</strong>.</p>
+<h2 id="successful-installation-of-xe24">Successful Installation of XE24</h2>
+<p>Congrats! You&#8217;ve successfully installed XE24 and you&#8217;re ready to start using Glassware. At the moment, it&#8217;s a bit of a technical process; we&#8217;re working on it though! For now, <a href="https://discord.gg/6xdEw33hKb">join the Discord</a> and a member of the community will be able to help you if you need it.</p>
+</body>
+</html>

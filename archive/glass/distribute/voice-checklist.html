@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="voice-command-checklist">Voice Command Checklist</h1>
+<p>Glass voice commands are carefully tuned and designed for the best accuracy and recognition. This means they take quite a bit of time for us to model and develop.</p>
+<p>We&#8217;ve come up with the following guidelines to help us more quickly evaluate and build your voice commands. You should follow the guidelines or have a good reason to break them.</p>
+<table>
+<thead>
+<tr>
+<th>Guideline</th>
+<th>Good Example</th>
+<th>Bad Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Is general enough to apply to multiple Glassware, but still has a clear purpose</td>
+<td>&#8220;ok glass, learn a song&#8221;</td>
+<td>&#8220;ok glass, learn something&#8221;, &#8220;ok glass, learn a song on guitar&#8221;</td>
+</tr>
+<tr>
+<td>Is colloquial and can explain Glass features in a conversation</td>
+<td>&#8220;ok glass, take a picture&#8221; (&#8220;You can use Glass to take a picture&#8221;)</td>
+<td>&#8220;ok glass, take picture&#8221; (&#8220;You can use Glass to take picture&#8221;)</td>
+</tr>
+<tr>
+<td>Is comfortable to say in public</td>
+<td>&#8220;ok glass, find a doctor&#8221;</td>
+<td>&#8220;ok glass, find a gynecologist&#8221;</td>
+</tr>
+<tr>
+<td>Brings the user from intent to action as quickly as possible</td>
+<td>&#8220;ok glass, find a recipe for&#8221; (this allows users to speak &#8220;chicken kiev&#8221; and immediately see the recipe)</td>
+<td>&#8220;ok glass, show me a cookbook&#8221; (this forces users to look through a list for what they want)</td>
+</tr>
+<tr>
+<td>Avoids brand words</td>
+<td>&#8220;ok glass, make a video call&#8221;</td>
+<td>&#8220;ok glass, start a hangout&#8221;</td>
+</tr>
+<tr>
+<td>Is long enough to ensure high recognition quality (at least three syllables)</td>
+<td>&#8220;ok glass, make a video call&#8221;</td>
+<td>&#8220;ok glass, hangout&#8221;</td>
+</tr>
+<tr>
+<td>Fits on a single line (less than 600px wide at 40px Roboto Thin)</td>
+<td>&#8220;ok glass, add a calendar event&#8221;</td>
+<td>&#8220;ok glass, create a new calendar event&#8221;</td>
+</tr>
+<tr>
+<td>Does not sound similar to existing commands</td>
+<td></td>
+<td>&#8220;ok glass, find a race&#8221; (too similar to &#8220;ok glass, find a place&#8221;)</td>
+</tr>
+<tr>
+<td>Does not require immediate interactivity in Mirror API Glassware. Immediate interactivity is only supported with GDK Glassware.</td>
+<td>&#8220;ok glass, take a note&#8221; (This allows users to speak a note and move on to their next task without worrying about a response from the Glassware.)</td>
+<td>&#8220;ok glass, find a recipe&#8221; (This requires a response from the Glassware so users can view the results. This is an acceptable GDK voice command but not acceptable for the Mirror API.)</td>
+</tr>
+<tr>
+<td>Has an imperative verb with an object</td>
+<td>&#8220;ok glass, make a video call&#8221;</td>
+<td>&#8220;ok glass, video call&#8221;</td>
+</tr>
+<tr>
+<td>Uses articles when possible</td>
+<td>&#8220;ok glass, record a video&#8221;</td>
+<td>&#8220;ok glass, record video&#8221;</td>
+</tr>
+<tr>
+<td>Uses definite articles only when the object is definite</td>
+<td>&#8220;ok glass, show me the weather&#8221;</td>
+<td>&#8220;ok glass, take the picture&#8221;</td>
+</tr>
+<tr>
+<td>Uses &#8220;this&#8221; when there is only one relevant instance of the object</td>
+<td>&#8220;ok glass, recognize this song&#8221;</td>
+<td>&#8220;ok glass, recognize songs&#8221;</td>
+</tr>
+<tr>
+<td>Uses me and my when appropriate</td>
+<td>&#8220;ok glass, show me the news&#8221;</td>
+<td>&#8220;ok glass, show the news&#8221;</td>
+</tr>
+<tr>
+<td>Refers to Glass as the subject carrying out the action</td>
+<td>&#8220;ok glass, start a run&#8221; (Glass starts Glassware that tracks a run)</td>
+<td>&#8220;ok glass, go running&#8221; (The user is the one that actually goes running)</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

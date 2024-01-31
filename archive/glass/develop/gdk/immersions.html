@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="immersions">Immersions</h1>
+<p>Immersions give you more ways to consume user input and create user interfaces. This allows you to create the most custom experience, but involves the most work.</p>
+<p>If this is your first time developing for Glass, read the <a href="immersion.html">Immersion guide</a> instead. That document goes over how to build a complete Glassware with immersions, following our design best practices.</p>
+<h2 id="how-they-work">How they work</h2>
+<p>Immersions display outside of the timeline, giving you complete control over the user experience from the time Glass launches the immersion.</p>
+<p>You build immersions with standard Android activities, layouts, UI widgets, and the rest of the Android platform. You then use the GDK to integrate into the Glass experience such as integrating voice commands, Glass-styled cards, and more.</p>
+<p><img src="static/user-interface-immersions.png" alt="" /></p>
+<h2 id="when-to-use-them">When to use them</h2>
+<p>Immersions are great for experiences that require prolonged user attention. They let you create a specialized UI that appears outside of the timeline, so users can delve deeper into a customized experience.</p>
+<p>Immersions are also necessary when you need to overwrite timeline-specific functionality such as forward and backward swipes and controlling the screen timeout.</p>
+<p>However, use immersions only if you have to, because they require more work to build and more time to design well. <a href="ui.html">Live cards</a> offer enough features and capability for most types of Glassware.</p>
+<h2 id="creating-immersions">Creating immersions</h2>
+<p>You create immersions using standard <a href="http://developer.android.com/guide/components/activities.html">Android activities</a>, but keep the following in mind when writing activities for Glass:</p>
+<ul>
+<li>  Design your UIs for a 640 × 360 pixel screen.</li>
+<li>  Design interactions that make sense on Glass instead of porting over activities from other Android devices.</li>
+<li>  Don&#8217;t rely on complex touch gestures or UI patterns.</li>
+<li>  Swiping down always goes back in the activity stack until users reach the timeline. It should function much like the Android back button on smartphones and tablets.</li>
+<li>  Create a 50 × 50 pixel icon and specify it for the <code>android:icon</code> attribute of the <code>&#60;activity&#62;</code> element in your Android manifest. Also specify text for <code>android:label</code>. This allows a voice or touch menu item that is associated with multiple Glassware to show your Glassware&#8217;s name and icon as an option.</li>
+<li>  Specify <a href="http://developer.android.com/reference/android/R.attr.html#immersive"><code>android:immersive="true"</code></a> for your <code>&#60;activity&#62;</code> element to give immersions focus after a screen sleeps and wakes up.</li>
+</ul>
+<h2 id="creating-and-displaying-a-menu">Creating and displaying a menu</h2>
+<p>Glass displays the correct styling for menus if you build them with the standard Android menu APIs inside of an activity.</p>
+<p>To display a menu for an activity, create menu resources and then display them on a user action, such as a tap when your activity has focus.</p>
+<blockquote>
+<p><strong>Note</strong>: Glass menus don&#8217;t support checkable items.</p>
+</blockquote>
+<h3 id="creating-menu-resources">Creating menu resources</h3>
+<p>Creating menu resources is the same as on the Android platform, but follow these guidelines:</p>
+<ul>
+<li>  For each menu item, provide a 50 × 50 pixel menu item icon. The menu icon must be white in color on a transparent background. <a href="../../menu_icons.zip">Download the Glass menu icons</a> for use or as an example.</li>
+<li>  Use a short phrase that describes the action and is in sentence case. An imperative verb works well (for example, &#8220;Share&#8221; or &#8220;Reply all&#8221;).</li>
+</ul>
+<p>Here&#8217;s a simple one to get you started:</p>
+<pre><code class="language-xml">&#60;menu xmlns:android="http:&#47;&#47;schemas.android.com&#47;apk&#47;res&#47;android"&#62;
+    &#60;item
+        android:id="@+id&#47;reply_menu_item"
+        android:title="@string&#47;reply"                &#60;!-- imperative verb --&#62;
+        android:icon="@drawable&#47;icons_50_reply" &#47;&#62;   &#60;!-- white in color on
+                                                     transparent background
+                                                     --&#62;
+&#60;&#47;menu&#62;
+</code></pre>
+<p>For more information about creating Android menus, see the <a href="http://developer.android.com/guide/topics/ui/menus.html#xml">Menu</a> topic in the Android SDK documentation.</p>
+<h3 id="handling-menu-callbacks">Handling menu callbacks</h3>
+<p>The <a href="http://developer.android.com/reference/android/app/Activity.html"><code>Activity</code></a> class contains callbacks that you override to handle menu creation, display, and teardown:</p>
+<ol>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onCreateOptionsMenu(android.view.Menu)"><code>onCreateOptionsMenu()</code></a> inflates the XML menu resource.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onPrepareOptionsMenu(android.view.Menu)"><code>onPrepareOptionsMenu()</code></a> shows or hides menu items if required. For example, you can show different menu items based on what users are doing.</li>
+<li> <a href="http://developer.android.com/reference/android/app/Activity.html#onOptionsItemSelected(android.view.MenuItem)"><code>onOptionsItemSelected()</code></a> handles user selection.</li>
+</ol>
+<pre><code class="language-java">public class MyActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.stopwatch, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        &#47;&#47; Implement if needed
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        &#47;&#47; Handle item selection. Menu items typically start another
+        &#47;&#47; activity, start a service, or broadcast another intent.
+        switch (item.getItemId()) {
+            case R.id.stop:
+                startActivity(new Intent(this,
+                StopStopWatchActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}
+</code></pre>
+<h3 id="displaying-the-menu">Displaying the menu</h3>
+<p>To display the menu, call <a href="http://developer.android.com/reference/android/app/Activity.html#openOptionsMenu()"><code>openOptionsMenu()</code></a> when required, such as a tap on the touchpad. The following examples detects a tap gesture on an activity and then calls <code>openOptionsMenu()</code>.</p>
+<pre><code class="language-java">public class MainActivity extends Activity {
+    &#47;&#47; ...
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+          if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+              openOptionsMenu();
+              return true;
+          }
+          return super.onKeyDown(keyCode, event);
+    }
+}
+</code></pre>
+<h3 id="menu-utilities">Menu utilities</h3>
+<p>Some helper methods are available to modify the look and behavior of menus. See <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/MenuUtils"><code>MenuUtils</code></a> for more information.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

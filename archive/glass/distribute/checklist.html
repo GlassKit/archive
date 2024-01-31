@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="glassware-guidelines">Glassware Guidelines</h1>
+<p>These guidelines will help you avoid common pitfalls and guide you through the process of building a high-quality Glassware.</p>
+<blockquote>
+<p><strong>Note</strong>: If a guideline item has GDK or Mirror API in the title, then you do not have to check that item if you&#8217;re not using that particular API.</p>
+</blockquote>
+<h2 id="invocation">Invocation</h2>
+<h3 id="i1.-use-voice-commands-correctly">I1. Use voice commands correctly</h3>
+<ul>
+<li>  Ensure your Glassware uses <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html">approved voice commands</a>.</li>
+<li>  Ensure your Glassware uses <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/ContextualMenus.Command">approved contextual commands</a>.</li>
+<li>  The Mirror API is not designed to receive requests from users and respond in real-time or with low latency. If this is a requirement, use the GDK. For example, Mirror API Glassware works well with the &#8220;take a note&#8221; or &#8220;post an update&#8221; command, because users do not have to wait for a response from the Glassware after invoking the command.</li>
+<li>  In contrast, &#8220;start a timer&#8221; and &#8220;tune an instrument&#8221; don&#8217;t work well with Mirror API Glassware, because users expect the experience to start immediately.</li>
+</ul>
+<h3 id="i2.-dont-use-a-pinned-mirror-api-timeline-item-as-a-launcher">I2. Don&#8217;t use a pinned Mirror API timeline item as a launcher</h3>
+<p>The two main ways for users to invoke Glassware and its features are by using a voice or touch command from the <strong>ok glass</strong> main menu or through a contextual menu from a timeline card.</p>
+<p>You should never force users to pin a timeline card with menu items for the purpose launching Glassware. The Mirror API is designed for <a href="../design/patterns#periodic_notifications">periodic notifications</a> based on user-configured settings or to <a href="https://developers.google.com/glass/develop/mirror/contacts">share content with contacts</a> [<strong>TODO</strong>: ADD LINK].</p>
+<p>Providing menu items to launch GDK Glassware or call the Mirror API is okay as long as the experience is consistent with the <a href="../design/patterns#periodic_notifications">periodic notifications</a> design pattern and does not use the <a href="https://developers.google.com/glass/distribute/best-practices#dont_use_the_mirror_api_for_immediate_interactivity">Mirror API for immediate interactivity</a> [<strong>TODO</strong>: ADD LINK].</p>
+<p>For example, a pet adoption Glassware shouldn&#8217;t insert a timeline card and force users to pin it to access features later on (for example, to &#8220;Search for dogs&#8221;, &#8220;Search for cats&#8221;, &#8220;Search for birds&#8221;, and so on). Instead, the Glassware should allow users to set criteria for the pets they want and periodically deliver cards that meet this criteria. These cards can then contain menu items to carry out actions such as &#8220;Read bio&#8221; and &#8220;Adopt pet&#8221;.</p>
+<h3 id="i3.-invoking-gdk-glassware-from-glass-home-starts-a-live-card-or-immersion">I3. Invoking GDK Glassware from Glass home starts a live card or immersion</h3>
+<p>It must be clear to users that Glassware is running if they explicitly invoke it.</p>
+<h2 id="design">Design</h2>
+<h3 id="d3.-dont-use-the-gdk-to-port-mobile-features-that-work-poorly-on-glass">D3. Don&#8217;t use the GDK to port mobile features that work poorly on Glass</h3>
+<p>Glass is designed for small pieces of information that&#8217;s delivered at the right time. Porting every feature from a mobile app will not work well on Glass. Instead find the main use cases that work well on Glass and focus on delivering a few magical features. See <a href="../design/principles#design_for_glass">Design for Glass</a> for inspiration.</p>
+<h3 id="d4.-use-the-gdk-to-innovate-new-features-but-be-consistent-with-the-glass-system-when-appropriate">D4. Use the GDK to innovate new features, but be consistent with the Glass system when appropriate</h3>
+<ul>
+<li>  Taps on live cards always bring up a Glass menu. All live cards must have a <strong>Stop</strong> menu item to dismiss the live card from the timeline.</li>
+<li>  If live cards start immersions, users are brought to where they previously left off in the immersion, where it makes sense.</li>
+<li>  Swiping or tapping in immersions always produce an action or feedback that the gesture was not consumed (for example, use <a href="../develop/gdk/card-scroller#horizontal_tugging_feedback">horizontal tugging</a>).</li>
+<li>  Gestures that don&#8217;t behave like the Glass system should have clear instructions on how to use them and clear results.</li>
+<li>  If you create UI elements that are similar to what the Glass system provides, use what the Glass system provides instead. For instance, use a <a href="../develop/gdk/card-scroller#scrolling_cards_in_activities">card scroll view</a> instead of implementing your own.</li>
+<li>  Use immersions for focused tasks that require it. Otherwise, other options such as a live card or static cards are preferred.</li>
+</ul>
+<h3 id="d6.-follow-standard-card-design-and-templates">D6. Follow standard card design and templates</h3>
+<p>When possible, use approved <a href="../design/style#layout_templates">card designs</a>. <a href="https://developers.google.com/glass/tools-downloads/playground">Mirror API</a> [<strong>TODO</strong>: ADD LINK] and <a href="../develop/gdk/card-design#xml_layouts">GDK</a> templates are available for some of these designs.</p>
+<ul>
+<li>  Use the styles in <a href="../design/static/base_style.css">base_style.css</a> if you are using the Mirror API.</li>
+<li>  Follow the <a href="../design/style#card_regions">general rules</a> for padding and spacing as the built-in templates.</li>
+</ul>
+<p><img src="../design/static/standard-template.png" alt="" /></p>
+<h3 id="d7.-bundle-and-paginate-cards-properly">D7. Bundle and paginate cards properly</h3>
+<p>Bundles and pagination allow you to group together cards, but you should use them correctly in the following situations.</p>
+<blockquote>
+<p><strong>Note</strong>: Bundling and paginating features are built into the Mirror API. If you are trying to achieve the same functionality in the GDK, mimic how the Mirror API presents bundling and pagination as close as possible. Use <a href="../develop/gdk/card-design#stack_indicator">stack indicators</a>, <a href="../develop/gdk/immersions#creating_and_displaying_a_menu">menu items</a>, and <a href="../develop/gdk/card-scroller#scrolling_cards_in_activities">card scrollers</a> to present your cards.</p>
+</blockquote>
+<h3 id="bundles">Bundles</h3>
+<ul>
+<li>  Use bundles for groups of cards that are similar but shouldn&#8217;t be on the same card.</li>
+<li>  Design bundle cover cards to be digests that are visually different from the cards the bundle contains.</li>
+<li>  Notify the user with a notification sound only once for each bundle.</li>
+</ul>
+<p>Cases where bundles work well:</p>
+<ul>
+<li>  A thread of emails or short messages</li>
+<li>  Three SMS messages between the same people</li>
+<li>  Five photos taken within an hour of each other</li>
+<li>  Related articles inserted all at once</li>
+<li>  A list of key events and score updates for an ongoing sports game</li>
+</ul>
+<p>Cases where bundles don&#8217;t work well:</p>
+<ul>
+<li>  All content from your service</li>
+<li>  Many headlines sent to Glass over the course of a day</li>
+</ul>
+<h3 id="pagination">Pagination</h3>
+<p>Use pagination for timeline items that do not fit on a single card because of space constraints, but otherwise should be on the same card.</p>
+<p>Cases where pagination work well:
+-   A single email, news story, or similar content that doesn&#8217;t fit on one card</p>
+<p>Cases where pagination doesn&#8217;t work well:
+-   A group of distinct cards, such as multiple news stories or emails</p>
+<h3 id="d8.-follow-best-practices">D8. Follow best practices</h3>
+<p>Ensure your Glassware adheres to the rest of our Glassware <a href="./best-practices#create_content_appropriately">best practices</a>.</p>
+<h2 id="web-properties">Web properties</h2>
+<h3 id="wp1.-highlight-glass-specific-features-on-your-website">WP1. Highlight Glass-specific features on your website</h3>
+<ul>
+<li>  Use the <a href="../send-to-glass-buttons.zip">Send to Glass</a> icons if sending content to Glass from the web.</li>
+<li>  Use the <a href="../get-it-on-glass-buttons.zip">Get it on Glass</a> icons if providing a link to download Glassware.</li>
+<li>  Ensure correct grammar and spelling.</li>
+</ul>
+<h3 id="wp2.-provide-easy-authorization-flows">WP2. Provide easy authorization flows</h3>
+<ul>
+<li>  Do not have more than two authorization or login pages.</li>
+<li>  Settings should not require re-authorization within a reasonable span of time (less than three months).</li>
+<li>  If an account or a companion app is required, the authorization flow is clear for users who have or don&#8217;t have an account with your service.</li>
+<li>  The URL to the authorization web page must be different from the URL for the settings web page.</li>
+<li>  If a user account is required, Glassware must not authenticate a user without connecting to the user account.</li>
+</ul>
+<h3 id="wp3.-provide-clear-and-useful-settings">WP3. Provide clear and useful settings</h3>
+<ul>
+<li>  Indicate visually that a settings change is saved.</li>
+<li>  Indicate update frequency overall and per feed if applicable to <a href="../design/principles#keep_it_relevant">keep your content relevant</a>. The following screenshot shows an example of allowing users to set update frequency and feed types.</li>
+</ul>
+<p><img src="static/cnn-settings.png" alt="" /></p>
+<h2 id="branding">Branding</h2>
+<h3 id="b1.-use-proprietary-glass-assets-correctly">B1. Use proprietary Glass assets correctly</h3>
+<p>The Glass brand and its associated assets are proprietary and are carefully designed and used by Google.</p>
+<ul>
+<li>  Do not use, modify, or mimic proprietary Glass logos or assets in any way unless they are provided on the <a href="/glass/tools-downloads/downloads">Assets</a> page.</li>
+<li>  Do not use, modify, or mimic the Glass logo font for use in your product.</li>
+</ul>
+<h2 id="writing">Writing</h2>
+<h3 id="w1.-glassware-and-its-description-are-in-english">W1. Glassware and its description are in English</h3>
+<p>Glassware and its related descriptions must be in English by default. Multiple languages are okay if there is complete feature parity between languages.</p>
+<h3 id="w2.-name-your-glassware-appropriately">W2. Name your Glassware appropriately</h3>
+<p>Ensure your Glassware name accurately portrays the Glassware&#8217;s functionality or branding. Do not use the string &#8220;Glass&#8221; in the name, unless it is in the phrase &#8220;for Glass.&#8221; For example, &#8220;Cat Facts for Glass&#8221; is okay, but not &#8220;Glass Cat Facts&#8221; or &#8220;Glassy Cat Photos.&#8221;</p>
+<h3 id="w3.-use-glass-terms-correctly">W3. Use Glass terms correctly</h3>
+<p>See the <a href="../branding-guidelines#glass_in_text">Glass in text</a> section for restrictions and guidelines.</p>
+<h3 id="w5.-use-glass-voice">W5. Use Glass voice</h3>
+<p>Follow <a href="../design/style#writing">guidelines</a> for writing when applicable.</p>
+<h2 id="testing">Testing</h2>
+<h3 id="t1.-test-on-actual-hardware">T1. Test on actual hardware</h3>
+<p>Run your Glassware on actual Glass hardware. This is the only way to accurately gauge the user experience. Also ensure that GDK Glassware does not cause unexpected performance, such as overheating Glass.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

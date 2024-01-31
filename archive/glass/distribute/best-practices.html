@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="best-practices">Best Practices</h1>
+<p>This document goes over some best practices for design and information delivery. Follow these guidelines when applicable to ensure the best user experience.</p>
+<h2 id="design-firstcode-second">Design first, code second</h2>
+<p>Learn the design principles and patterns before you start to develop on Glass. For more information, read the <a href="../design/index.html">Design</a> guides.</p>
+<p>To get early design feedback, create and submit your Glassware Flow design to the review team.</p>
+<blockquote>
+<p><strong>Editor&#8217;s note</strong>: Glassware Flow Designer is out of commission.</p>
+</blockquote>
+<h2 id="dont-use-a-pinned-timeline-item-as-a-launcher">Don&#8217;t use a pinned timeline item as a launcher</h2>
+<p>The two main ways for users to invoke Glassware and its features are by using a voice or touch command from the <strong>ok glass</strong> main menu or through a contextual menu from a timeline card.</p>
+<p>You should never force users to pin a timeline card with menu items for the purpose launching Glassware. The Mirror API is designed for <a href="../design/patterns#periodic_notifications">periodic notifications</a> based on user-configured settings.</p>
+<p>Providing menu items to launch GDK Glassware or call the Mirror API is okay as long as the experience is consistent with the <a href="../design/patterns#periodic_notifications">periodic notifications</a> design pattern and does not use the <a href="#dont_use_the_mirror_api_for_immediate_interactivity">Mirror API for immediate interactivity</a>.</p>
+<p>For example, a pet adoption Glassware shouldn&#8217;t insert a timeline card and force users to pin it to access features later on (for example, to &#8220;Search for dogs&#8221;, &#8220;Search for cats&#8221;, &#8220;Search for birds&#8221;, and so on). Instead, the Glassware should allow users to set criteria for the pets they want and periodically deliver cards that meet this criteria. These cards can then contain menu items to carry out actions such as &#8220;Read bio&#8221; and &#8220;Adopt pet&#8221;.</p>
+<h2 id="follow-standard-card-design-and-templates">Follow standard card design and templates</h2>
+<p>When possible, use approved <a href="../develop/gdk/card-design#layouts">card designs</a> and templates. If the templates do not work:</p>
+<blockquote>
+<p><strong>Editor&#8217;s note</strong>: the templates do not work.</p>
+</blockquote>
+<ul>
+<li>  Use the styles in <a href="../design/static/base_style.css">base_style.css</a> if you are using the Mirror API.</li>
+<li>  Follow the <a href="../design/style#card_regions">general rules</a> for padding and spacing as the built-in templates.</li>
+</ul>
+<p><img src="../design/static/standard-template.png" alt="" /></p>
+<h2 id="follow-media-requirements">Follow media requirements</h2>
+<p>If delivering media, follow these guidelines:</p>
+<ul>
+<li>  All public videos are streamed and not attached to timeline items.</li>
+<li>  Video aspect ratio is 16:9.</li>
+<li>  Video resolution is 640 × 360 pixels.</li>
+<li>  H.264 format</li>
+</ul>
+<h2 id="bundle-and-paginate-properly">Bundle and paginate properly</h2>
+<p>Bundles and pagination allow you to group together cards, but you should use them correctly in the following situations.</p>
+<h3 id="bundles">Bundles</h3>
+<ul>
+<li>  Use bundles for groups of cards that are similar but shouldn&#8217;t be on the same card.</li>
+<li>  Design bundle cover cards to be digests that are visually different from the cards the bundle contains.</li>
+<li>  Notify the user with a notification sound only once for each bundle.</li>
+</ul>
+<p>Cases where bundles work well:</p>
+<ul>
+<li>  A thread of emails or short messages</li>
+<li>  Three SMS messages between the same people</li>
+<li>  Five photos taken within an hour of each other</li>
+<li>  Related articles inserted all at once</li>
+<li>  A list of key events and score updates for an ongoing sports game</li>
+</ul>
+<p>Cases where bundles don&#8217;t work well:</p>
+<ul>
+<li>  All content from your service</li>
+<li>  Many headlines sent to Glass over the course of a day</li>
+</ul>
+<h3 id="pagination">Pagination</h3>
+<p>Use pagination for timeline items that do not fit on a single card because of space constraints, but otherwise should be on the same card.</p>
+<p>Cases where pagination work well:</p>
+<ul>
+<li>  A single email, news story, or similar content that doesn&#8217;t fit on one card</li>
+</ul>
+<p>Cases where pagination doesn&#8217;t work well:</p>
+<ul>
+<li>  A group of distinct cards, such as multiple news stories or emails</li>
+</ul>
+<h2 id="follow-standard-menu-design">Follow standard menu design</h2>
+<h3 id="custom-menu-items">Custom menu items</h3>
+<ul>
+<li>  Each menu item action must have an associated 50 × 50 icon. Use the <a href="../menu_icons.zip">Glass menu icons</a> to stay consistent with the Glass UI.</li>
+<li>  Limit display names to a few words if possible. Use an imperative verb with or without an object.</li>
+<li>  Use the default icon and display name for built-in menu items unless you are using the menu item for something very different.</li>
+<li>  Icons are completely white in color and on transparent backgrounds.</li>
+<li>  Use short and actionable menu item display names. Imperative verbs with or without objects work great, like in the following examples.</li>
+<li>  &#8220;Dismiss&#8221; menu items remove the timeline card from the timeline only, so create a custom menu item for this only if you require it. In general, you should let timeline items decay naturally over time and not require users to actively manage your app.</li>
+<li>  Keep names to 15 characters or less. For example:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Bad</th>
+<th>Good</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extend recording</td>
+<td>Extend video</td>
+</tr>
+<tr>
+<td>Send a message to Joe</td>
+<td>Send message</td>
+</tr>
+</tbody>
+</table>
+<h3 id="built-in-menu-items">Built-in menu items</h3>
+<ul>
+<li><p>Reply or Reply All - Voice replies are intended to capture free-form input by voice. Do not use voice replies to capture a limited set of options, such as possible moves in a game.</p></li>
+<li><p>Delete - Dismisses the timeline card and deletes the content that corresponds to the timeline card everywhere it is stored (local and server storage). Do not confuse your users by offering a &#8220;Delete&#8221; menu item if the functionality you offer is a &#8220;Dismiss&#8221;.</p></li>
+</ul>
+<h2 id="dont-use-the-mirror-api-for-immediate-interactivity">Don&#8217;t use the Mirror API for immediate interactivity</h2>
+<p>The Mirror API is not designed to receive requests from users and respond in real-time or with low latency. If this is a requirement, use the GDK.</p>
+<p>For example, Mirror API Glassware works well with the &#8220;take a note&#8221; command, because users do not have to wait for a response from the Glassware after invoking the command.</p>
+<p>In contrast, &#8220;find a recipe, spaghetti&#8221; does not work well with Mirror API Glassware, because users expect search results to display immediately. With the Mirror API, users have to wait a while for a card to be inserted to the timeline to continue using the Glassware, which is not a good user experience.</p>
+<p>This constraint applies to main voice commands on the Glass Home card as well as menu items on cards and immersions.</p>
+<h2 id="create-content-appropriately">Create content appropriately</h2>
+<p>When creating content for your cards, each card needs to be concise and contain one logical piece of information. In addition:</p>
+<ul>
+<li>  Use imagery instead of text when possible</li>
+<li>  Display images in their original aspect ratio (cropped is okay).</li>
+<li>  Keep the middle area of a card&#8217;s footer blank. The <strong>ok glass</strong> contextual voice menu appears here and blocks any content beneath it.</li>
+<li>  If desired, use the <code>auto-resize</code> CSS class to automatically resize font sizes based on your content.</li>
+<li>  Follow our <a href="../design/style.html">writing guidelines</a>.</li>
+</ul>
+<p><img src="static/contextual-voice.png" alt="" /></p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

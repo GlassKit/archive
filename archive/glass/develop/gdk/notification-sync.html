@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="notification-sync">Notification Sync</h1>
+<p>Android notifications are supported on Glass through Notification Sync. When the Android system sends a notification on a user&#8217;s phone, it also appears in their timeline on Glass. This allows virtually any app available on Android to display notifications on Glass with zero effort required on Glassware development.</p>
+<p>Notifications on Glass works synchronously with your Android mobile phone. When you dismiss the notification on either of the devices, the system dismisses the notification on the other one.</p>
+<p><a href="https://developer.android.com/reference/android/support/v4/app/NotificationCompat.WearableExtender"><code>WearableExtender</code></a> provides extensions specifically for wearables. The following sections describe these extensions.</p>
+<h2 id="actions">Actions</h2>
+<p>When you define a primary content action on the notification with <a href="https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#setContentIntent(android.app.PendingIntent)"><code>setContentIntent()</code></a>, the &#8220;Open on Phone&#8221; action appears on the Glass notification. You can add a maximum of three actions to your app. For more information on creating and handling actions for notifications, see <a href="https://developer.android.com/training/wearables/notifications/creating.html#ActionButtons">Add Action buttons</a>.</p>
+<h2 id="voice-replies">Voice replies</h2>
+<p>When your notification requires a text response, Glass can transcribe your voice. For more details on how to trigger voice recognition, see <a href="https://developer.android.com/training/wearables/notifications/voice-input.html">Receiving Voice Input on a Notification</a>.</p>
+<blockquote>
+<p><strong>Note</strong>: While voice input works on Glass, pre-defined text responses aren&#8217;t supported.</p>
+</blockquote>
+<p><img src="static/notification_card_reply_action.png" alt="" />
+<img src="static/notification_card_voice_input.png" alt="" /></p>
+<h2 id="pages">Pages</h2>
+<p>To add more information to your notification without requiring users to open your app on their handheld device, you add pages to your notification. On Glass, these notifications have a &#8220;Show More&#8221; action that lets the user swipe through the cards. To add pages to your notifications, see <a href="https://developer.android.com/training/wearables/notifications/pages.html">Adding Pages to a Notification</a>.</p>
+<p><img src="static/notification_card_pages.png" alt="" /></p>
+<h2 id="stacks">Stacks</h2>
+<p>If your app creates multiple notifications, you should group them into a stack. On Glass, stacked notifications appear as card bundles. To learn more about stacking, see <a href="https://developer.android.com/training/wearables/notifications/stacks.html">Stacking Notifications</a>.</p>
+<p><img src="static/notification_card_bundle.png" alt="" /></p>
+<h2 id="background">Background</h2>
+<p>Background images give context on where notifications are coming from. Use the <a href="https://developer.android.com/reference/android/app/Notification.BigPictureStyle.html"><code>BigPictureStyle</code></a> on Android notifications to automatically generate the Glass notification. This contextualized styling provides a better user experience. To see an example of additional styling of notifications on Wear, see <a href="https://developer.android.com/training/wearables/notifications/creating.html#AddWearableFeatures">Add Wearable Features</a>.</p>
+<p><img src="static/notification_card_bigpicture.png" alt="" /></p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

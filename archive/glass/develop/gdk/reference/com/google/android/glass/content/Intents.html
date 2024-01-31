@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="intents">Intents</h1>
+<p>Added in API level XE18.1</p>
+<p>Definition of platform intent actions and extras.</p>
+<table>
+<thead>
+<tr>
+<th>Constants</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td><a href="#ACTION_ON_HEAD_STATE_CHANGED">ACTION<em>ON</em>HEAD<em>STATE</em>CHANGED</a></td>
+<td>Broadcast action: sent when the user starts or stops wearing the device.</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td><a href="#EXTRA_IS_ON_HEAD">EXTRA<em>IS</em>ON_HEAD</a></td>
+<td>Boolean extra denoting whether the user is wearing the device.</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td><a href="#EXTRA_PICTURE_FILE_PATH">EXTRA<em>PICTURE</em>FILE_PATH</a></td>
+<td>String extra holding the file path of the picture.</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td><a href="#EXTRA_THUMBNAIL_FILE_PATH">EXTRA<em>THUMBNAIL</em>FILE_PATH</a></td>
+<td>String extra holding the file path of the thumbnail representing a captured picture or video.</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td><a href="#EXTRA_VIDEO_FILE_PATH">EXTRA<em>VIDEO</em>FILE_PATH</a></td>
+<td>String extra holding the file path of the video.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="constants">Constants</h2>
+<p>Added in API level XE18.1</p>
+<h4 id="public-static-finalstringactiononheadstatechanged">public static final <a href="http://developer.android.com/reference/java/lang/String.html">String</a> <strong>ACTION<em>ON</em>HEAD<em>STATE</em>CHANGED</strong> </h4>
+<p>Broadcast action: sent when the user starts or stops wearing the device.</p>
+<p>This is a protected intent that can only be sent by the system.</p>
+<h5 id="see-also">See Also</h5>
+<ul>
+<li>  <a href="#EXTRA_IS_ON_HEAD"><code>EXTRA_IS_ON_HEAD</code></a></li>
+</ul>
+<p>Constant Value: "com.google.android.glass.action.ON<em>HEAD</em>STATE_CHANGED&#8221;</p>
+<p>Added in API level XE18.1</p>
+<h4 id="public-static-finalstringextraison_head">public static final <a href="http://developer.android.com/reference/java/lang/String.html">String</a> <strong>EXTRA<em>IS</em>ON_HEAD</strong> </h4>
+<p>Boolean extra denoting whether the user is wearing the device.</p>
+<h5 id="see-also-1">See Also</h5>
+<ul>
+<li>  <a href="#ACTION_ON_HEAD_STATE_CHANGED"><code>ACTION_ON_HEAD_STATE_CHANGED</code></a></li>
+</ul>
+<p>Constant Value: "is<em>on</em>head&#8221;</p>
+<p>Added in API level XE18.1</p>
+<h4 id="public-static-finalstringextrapicturefile_path">public static final <a href="http://developer.android.com/reference/java/lang/String.html">String</a> <strong>EXTRA<em>PICTURE</em>FILE_PATH</strong> </h4>
+<p>String extra holding the file path of the picture.</p>
+<h5 id="see-also-2">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/provider/MediaStore.html#ACTION_IMAGE_CAPTURE"><code>ACTION_IMAGE_CAPTURE</code></a></li>
+</ul>
+<p>Constant Value: "picture<em>file</em>path&#8221;</p>
+<p>Added in API level XE18.1</p>
+<h4 id="public-static-finalstringextrathumbnailfile_path">public static final <a href="http://developer.android.com/reference/java/lang/String.html">String</a> <strong>EXTRA<em>THUMBNAIL</em>FILE_PATH</strong> </h4>
+<p>String extra holding the file path of the thumbnail representing a captured picture or video.</p>
+<h5 id="see-also-3">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/provider/MediaStore.html#ACTION_IMAGE_CAPTURE"><code>ACTION_IMAGE_CAPTURE</code></a>`</li>
+<li>  <a href="http://developer.android.com/reference/android/provider/MediaStore.html#ACTION_VIDEO_CAPTURE"><code>ACTION_VIDEO_CAPTURE</code></a></li>
+</ul>
+<p>Constant Value: "thumbnail<em>file</em>path&#8221;</p>
+<p>Added in API level XE18.1</p>
+<h4 id="public-static-finalstringextravideofile_path">public static final <a href="http://developer.android.com/reference/java/lang/String.html">String</a> <strong>EXTRA<em>VIDEO</em>FILE_PATH</strong> </h4>
+<p>String extra holding the file path of the video.</p>
+<h5 id="see-also-4">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/provider/MediaStore.html#ACTION_VIDEO_CAPTURE"><code>ACTION_VIDEO_CAPTURE</code></a></li>
+</ul>
+<p>Constant Value: "video<em>file</em>path&#8221;</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

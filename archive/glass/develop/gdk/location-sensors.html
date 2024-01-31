@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="locations-and-sensors">Locations and Sensors</h1>
+<p>You access location and sensor data using the standard Android platform APIs.## Location</p>
+<p>Location on Glass involves using the standard Android platform APIs to get location data from available location providers.</p>
+<p>You&#8217;ll use the following Android SDK classes to get location data:</p>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/location/LocationManager.html"><code>LocationManager</code></a> – Provides access to the Android location system service that handles communication with a <a href="http://developer.android.com/reference/android/location/LocationProvider.html"><code>LocationProvider</code></a>.</li>
+<li>  <a href="http://developer.android.com/reference/android/location/LocationProvider.html"><code>LocationProvider</code></a> – Provides location data based on some criteria. Glass provides special &#8220;remote&#8221; providers that let you obtain location data from a paired device that has the MyGlass companion app installed.</li>
+<li>  <a href="http://developer.android.com/reference/android/location/Criteria.html"><code>Criteria</code></a> – Lets you create a set of criteria that selects the best <a href="http://developer.android.com/reference/android/location/LocationProvider.html"><code>LocationProvider</code></a> based on the criteria that you set.</li>
+</ul>
+<h3 id="overview">Overview</h3>
+<p>To obtain location data, you&#8217;ll need to use the <a href="http://developer.android.com/reference/android/location/LocationManager.html"><code>LocationManager</code></a> class to get data from one or more location providers.</p>
+<p>Applications on an Android phone or tablet retrieve location data from local GPS and network location providers on the device. On Glass, however, the set of available location providers is dynamic and may include <em>remote</em> location providers that supply location data from another source, such as a Bluetooth-paired device with the MyGlass companion app installed. To handle these additional providers, listen for location updates from <em>multiple providers</em> rather than a single provider.</p>
+<blockquote>
+<p><strong>Warning</strong>: Do not use the <a href="http://developer.android.com/reference/android/location/LocationManager.html#getBestProvider(android.location.Criteria,%20boolean)"><code>LocationManager.getBestProvider()</code></a> method or the constants <a href="http://developer.android.com/reference/android/location/LocationManager.html#GPS_PROVIDER"><code>GPS_PROVIDER</code></a> or <a href="http://developer.android.com/reference/android/location/LocationManager.html#NETWORK_PROVIDER"><code>NETWORK_PROVIDER</code></a> to listen for location updates. Glass uses a dynamic set of providers and listening only to a single provider may cause your application to miss location updates.</p>
+</blockquote>
+<p>To request data from all available location providers:</p>
+<ol>
+<li> Create a <a href="http://developer.android.com/reference/android/location/Criteria.html"><code>Criteria</code></a> object with your location requirements.</li>
+<li> Call <a href="http://developer.android.com/reference/android/location/LocationManager.html#getProviders(android.location.Criteria,%20boolean)"><code>getProviders()</code></a> to retrieve the list of enabled providers that satisfy your criteria.</li>
+<li> Iterate over the list of providers and request updates from all of them. This ensures that you receive updates from the remote providers if they are available but also from the local providers on Glass (such as a wireless network provider).</li>
+<li> Use the accuracy and timing information provided with each update to determine whether the update is good enough or if you should wait for another one.</li>
+</ol>
+<pre><code class="language-java">LocationManager locationManager; &#47;&#47; initialized elsewhere
+
+&#47;&#47; This example requests fine accuracy and requires altitude, but
+&#47;&#47; these criteria could be whatever you want.
+Criteria criteria = new Criteria();
+criteria.setAccuracy(Criteria.ACCURACY_FINE);
+criteria.setAltitudeRequired(true);
+
+List&#60;String&#62; providers = locationManager.getProviders(
+        criteria, true &#47;* enabledOnly *&#47;);
+
+for (String provider : providers) {
+    locationManager.requestLocationUpdates(provider, minTime,
+            minDistance, listener);
+}
+</code></pre>
+<h2 id="sensors">Sensors</h2>
+<h3 id="glass">Glass</h3>
+<p>Glass has a specialized sensor to detect whether or not the device is on the users&#8217; head. When enabled, this setting helps conserve battery when the device is not in use. You can use this feature in your Glassware to disable or throttle background services. Start by implementing a <a href="https://developer.android.com/reference/android/content/BroadcastReceiver.html"><code>BroadcastReceiver</code></a> to detect <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#ACTION_ON_HEAD_STATE_CHANGED"><code>ACTION_ON_HEAD_STATE_CHANGE</code></a> [<strong>TODO</strong>: ADD LINK] events.</p>
+<blockquote>
+<p><strong>Note</strong>: Your app can not detect on-head detection events if the user disables the feature in the settings.</p>
+</blockquote>
+<p>The following example delays and disables game score updates based on whether the user has removed Glass from their head:</p>
+<ol>
+<li> Implement a <a href="https://developer.android.com/reference/android/content/BroadcastReceiver.html"><code>BroadcastReceiver</code></a> to handle the state change.</li>
+<li> In your service, implement the <a href="https://developer.android.com/reference/android/app/Service.html#onCreate()"><code>onCreate()</code></a> method and register a receiver that listens for the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/content/Intents#ACTION_ON_HEAD_STATE_CHANGED"><code>ACTION_ON_HEAD_STATE_CHANGE</code></a> [<strong>TODO</strong>: ADD LINK] intent.</li>
+<li> In the <a href="https://developer.android.com/reference/android/app/Service.html#onDestroy()"><code>onDestroy()</code></a> method, unregister the receiver.</li>
+</ol>
+<pre><code class="language-java">import com.google.android.glass.content.Intents;
+...
+
+public class LiveCardService extends Service {
+
+    ...
+    private boolean mIsStopped = false;
+
+    private final BroadcastReceiver broadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (Intents.ACTION_ON_HEAD_STATE_CHANGED.equals(intent.getAction())) {
+                boolean onHead = intent.getBooleanExtra(Intents.EXTRA_IS_ON_HEAD,
+                        false);
+                if (onHead) {
+                    mDelay = LiveCardService.DELAY_MILLIS;
+                    if (isStopped()) {
+                        &#47;&#47; Resume updating scores
+                        setStop(false);
+
+                        &#47;&#47; Restart immediately to get a refreshed score
+                        mHandler.postDelayed(mUpdateLiveCardRunnable, 0);
+                    }
+                } else {
+                    &#47;&#47; Increase the delay when the device is off head
+                    mDelay = LiveCardService.DELAY_MILLIS_EXT;
+                }
+            }
+        }
+    };
+
+    private final Runnable mUpdateLiveCardRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+
+            if (mDelay == DELAY_MILLIS_EXT) {
+                &#47;&#47; Count the increased delay as a retry attempt
+                mRetryCount++;
+            } else if (mDelay == DELAY_MILLIS) {
+                mRetryCount = 0;
+            }
+
+            if (mRetryCount &#62; MAX_RETRIES) {
+                &#47;&#47; Stop updating scores
+                mIsStopped = true;
+            }
+
+            if (!isStopped()) {
+                &#47;&#47; Generate fake points.
+                homeScore += mPointsGenerator.nextInt(3);
+                awayScore += mPointsGenerator.nextInt(3);
+
+                &#47;&#47; Update the remote view with the new scores.
+                mLiveCardView = getRemoteViews(homeScore, awayScore);
+
+                &#47;&#47; Always call setViews() to update the live card&#39;s RemoteViews.
+                mLiveCard.setViews(mLiveCardView);
+
+                &#47;&#47; Queue another score update in 30 seconds.
+                mHandler.postDelayed(mUpdateLiveCardRunnable, mDelay);
+            }
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mPointsGenerator = new Random();
+        mDelay = DELAY_MILLIS;
+
+        registerReceiver(broadCastReceiver, new IntentFilter(
+                Intents.ACTION_ON_HEAD_STATE_CHANGED));
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mLiveCard == null) {
+
+            &#47;&#47; Get an instance of a live card
+            mLiveCard = new LiveCard(this, LIVE_CARD_TAG);
+
+            &#47;&#47; Inflate a layout into a remote view
+            mLiveCardView = new RemoteViews(getPackageName(),
+                    R.layout.live_card);
+
+            &#47;&#47; Set up initial RemoteViews values
+            homeScore = 0;
+            awayScore = 0;
+            mLiveCardView = getRemoteViews(homeScore, awayScore);
+
+            &#47;&#47; Set up the live card&#39;s action with a pending intent
+            &#47;&#47; to show a menu when tapped
+            Intent menuIntent = new Intent(this, LiveCardMenuActivity.class);
+            menuIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mLiveCard.setAction(PendingIntent.getActivity(
+                    this, 0, menuIntent, 0));
+
+            &#47;&#47; Publish the live card
+            mLiveCard.publish(PublishMode.REVEAL);
+
+            &#47;&#47; Queue the update text runnable
+            mHandler.post(mUpdateLiveCardRunnable);
+        }
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mLiveCard != null &#38;&#38; mLiveCard.isPublished()) {
+            &#47;&#47;Stop the handler from queuing more Runnable jobs
+            setStop(true);
+
+            mLiveCard.unpublish();
+            mLiveCard = null;
+        }
+
+        unregisterReceiver(broadCastReceiver);
+
+        super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private RemoteViews getRemoteViews(int homeScore, int awayScore) {
+        RemoteViews remoteViews = new RemoteViews(getPackageName(),
+                R.layout.live_card);
+
+        remoteViews.setTextViewText(R.id.home_team_name_text_view,
+                getString(R.string.home_team));
+        remoteViews.setTextViewText(R.id.away_team_name_text_view,
+                getString(R.string.away_team));
+        remoteViews.setTextViewText(R.id.footer_text,
+                getString(R.string.game_quarter));
+
+        remoteViews.setTextViewText(R.id.home_score_text_view,
+                String.valueOf(homeScore));
+        remoteViews.setTextViewText(R.id.away_score_text_view,
+                String.valueOf(awayScore));
+        return remoteViews;
+    }
+
+    public boolean isStopped() {
+        return mIsStopped;
+    }
+
+    public void setStop(boolean isStopped) {
+        mIsStopped = isStopped;
+    }
+}
+</code></pre>
+<h3 id="android">Android</h3>
+<p>The following Android sensors are supported on Glass:</p>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_ACCELEROMETER"><code>TYPE_ACCELEROMETER</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_GRAVITY"><code>TYPE_GRAVITY</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_GYROSCOPE"><code>TYPE_GYROSCOPE</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_LIGHT"><code>TYPE_LIGHT</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_LINEAR_ACCELERATION"><code>TYPE_LINEAR_ACCELERATION</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_MAGNETIC_FIELD"><code>TYPE_MAGNETIC_FIELD</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_ORIENTATION"><code>TYPE_ORIENTATION</code></a> (deprecated)</li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_ROTATION_VECTOR"><code>TYPE_ROTATION_VECTOR</code></a></li>
+</ul>
+<p>The following Android sensors are not supported:</p>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_AMBIENT_TEMPERATURE"><code>TYPE_AMBIENT_TEMPERATURE</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_PRESSURE"><code>TYPE_PRESSURE</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_PROXIMITY"><code>TYPE_PROXIMITY</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_RELATIVE_HUMIDITY"><code>TYPE_RELATIVE_HUMIDITY</code></a></li>
+<li>  <a href="http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_TEMPERATURE"><code>TYPE_TEMPERATURE</code></a></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: The Glass platform is based on Android 4.4 (API Level 19), but does not support the sensor features of that platform level or Android 4.3 (API Level 18). API features for sensors is frozen at Android 4.2 (API Level 17) for the aforementioned sensors that are supported.</p>
+</blockquote>
+<p>Here are some tips when using sensors on Glass:</p>
+<ul>
+<li>  The Glass sensor coordinate system is shown below relative to the Glass display. For more information, see <a href="http://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-coords">sensor coordinate system</a>.</li>
+</ul>
+<p><img src="static/sensor-coord.png" alt="" /></p>
+<ul>
+<li>  The accelerometer, gyroscope, and magnetometer are located on the optics pod of the Glass device, which users rotate to align the device with their sight. You cannot measure the angle of the optics pod directly, so be aware of this when using angles from these sensors for applications such as compass heading.</li>
+<li>  To preserve battery life, only listen to sensors when you need them. For example, if your Glassware uses a <a href="http://developer.android.com/reference/android/app/Service.html"><code>Service</code></a> to render a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> [<strong>TODO</strong>: ADD LINK] and you only need the sensors when the live card is visible, use the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> [<strong>TODO</strong>: ADD LINK] surface callback methods to start and stop listening to the sensors.</li>
+<li>  Sensor event callbacks run on the UI thread, so process events and return as quickly as possible. Consider pushing sensor events into a queue and using a background thread to handle them if your processing takes too long.</li>
+<li>  50 Hz is often a sufficient sampling rate for tracking head motion.</li>
+</ul>
+<p>For more information on how to use sensors, see the <a href="http://developer.android.com/guide/topics/sensors/sensors_overview.html">Android developer guide</a>.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

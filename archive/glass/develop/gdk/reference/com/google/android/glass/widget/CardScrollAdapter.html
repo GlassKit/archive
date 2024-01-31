@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<p>Added in API level XE12</p>
+<p>A special form of a <a href="http://developer.android.com/reference/android/widget/BaseAdapter.html"><code>BaseAdapter</code></a>.</p>
+<p>Use this in combination with a <a href="CardScrollView.html"><code>CardScrollView</code></a> to implement horizontally scrolling views, also referred to as cards. This adapter binds (possibly dynamic) data to the <a href="CardScrollView.html"><code>CardScrollView</code></a> by retrieving the data (if needed) and converting each data item into a card. Each card visually represents a certain <a href="http://developer.android.com/reference/java/lang/Object.html"><code>Object</code></a> item.</p>
+<p>To be consistent with the Glass UI, create cards with the <a href="CardBuilder.html"><code>CardBuilder</code></a> class, which supports several content layouts. If you require more flexibility, you can create your own XML layouts or create views programmatically.</p>
+<p>See <a href="card-scroller.html#scrolling_cards_in_activities">Scrolling cards in activities</a> for more information.</p>
+<table>
+<thead>
+<tr>
+<th>Inherent Constants</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From interface android.widget.Adapter</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>INGORE<em>ITEM</em>VIEW_TYPE</td>
+</tr>
+<tr>
+<td>int</td>
+<td>NO_SELECTION</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Constructors</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#CardScrollAdapter()">CardScrollAdapter</a>()</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Public Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abstract int</td>
+<td><a href="#getCount()">getCount</a>()</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#getHomePosition()">getHomePosition</a>()</td>
+</tr>
+<tr>
+<td>abstract Object</td>
+<td><a href="#getItem(int)">getItem</a>(int position)</td>
+</tr>
+<tr>
+<td>long</td>
+<td><a href="#getItemId(int)">getItemId</a>(int position)</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#getItemViewType(int)">getItemViewType</a>(int position)</td>
+</tr>
+<tr>
+<td>abstract int</td>
+<td><a href="#getPosition(java.lang.Object)">getPosition</a>(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> item)</td>
+</tr>
+<tr>
+<td>abstract <a href="http://developer.android.com/reference/android/view/View.html">View</a></td>
+<td><a href="#getView(int,%20android.view.View,%20android.view.ViewGroup)">getView</a>(int position, <a href="http://developer.android.com/reference/android/view/View.html">View</a> convertView, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> parent)</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#getViewTypeCount()">getViewTypeCount</a>()</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class android.widget.BaseAdapter</td>
+<td></td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>areAllItemsEnabled()</td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/android/view/View.html">View</a></td>
+<td>getDropDownView(int arg0, <a href="http://developer.android.com/reference/android/view/View.html">View</a> arg1, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> arg2)</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getItemViewType(int arg0)</td>
+</tr>
+<tr>
+<td>int</td>
+<td>getViewTypeCount()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>hasStableIds()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isEmpty()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>isEnabled(int arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>notifyDataSetChanged()</td>
+</tr>
+<tr>
+<td>void</td>
+<td>notifyDataSetInvalidated()</td>
+</tr>
+<tr>
+<td>void</td>
+<td>registerDataSetObserver(<a href="http://developer.android.com/reference/android/database/DataSetObserver.html">DataSetObserver</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>unregisterDataSetObserver(<a href="http://developer.android.com/reference/android/database/DataSetObserver.html">DataSetObserver</a> arg0)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>From interface android.widget.Adapter</td>
+<td></td>
+</tr>
+<tr>
+<td>abstract int</td>
+<td>getCount()</td>
+</tr>
+<tr>
+<td>abstract <a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>getItem(int arg0)</td>
+</tr>
+<tr>
+<td>abstract long</td>
+<td>getItemId(int arg0)</td>
+</tr>
+<tr>
+<td>abstract int</td>
+<td>getItemViewType(int arg0)</td>
+</tr>
+<tr>
+<td>abstract <a href="http://developer.android.com/reference/android/view/View.html">View</a></td>
+<td>getView(int arg0, <a href="http://developer.android.com/reference/android/view/View.html">View</a> arg1, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> arg2)</td>
+</tr>
+<tr>
+<td>abstract int</td>
+<td>getViewTypeCount()</td>
+</tr>
+<tr>
+<td>abstract boolean</td>
+<td>hasStableIds()</td>
+</tr>
+<tr>
+<td>abstract boolean</td>
+<td>isEmpty()</td>
+</tr>
+<tr>
+<td>abstract void</td>
+<td>registerDataSetObserver(<a href="http://developer.android.com/reference/android/database/DataSetObserver.html">DataSetObserver</a> arg0)</td>
+</tr>
+<tr>
+<td>abstract void</td>
+<td>unregisterDataSetObserver(<a href="http://developer.android.com/reference/android/database/DataSetObserver.html">DataSetObserver</a> arg0)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>From interface android.widget.ListAdapter</td>
+<td></td>
+</tr>
+<tr>
+<td>abstract boolean</td>
+<td>areAllItemsEnabled()</td>
+</tr>
+<tr>
+<td>abstract boolean</td>
+<td>isEnabled(int arg0)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>From interface android.widget.SpinnerAdapter</td>
+<td></td>
+</tr>
+<tr>
+<td>abstract <a href="http://developer.android.com/reference/android/view/View.html">View</a></td>
+<td>getDropDownView(int arg0, <a href="http://developer.android.com/reference/android/view/View.html">View</a> arg1, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> arg2)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-methods">Public Methods</h2>
+<p>Added in API level XE12</p>
+<h4 id="public-abstract-intgetcount">public abstract int <strong>getCount</strong> () </h4>
+<p>Added in API level XE12</p>
+<h4 id="public-intgethomeposition">public int <strong>getHomePosition</strong> () </h4>
+<p>Returns the home position. The default implementation simply assumes position 0 is the home position, but the user can override this method to move the home position to a different card.</p>
+<p>For example, the home position of the Glass timeline is the clock card, and other cards can be located both to the left and to the right of it.</p>
+<h5 id="returns">Returns</h5>
+<ul>
+<li>  the position of the item that represents the home position</li>
+</ul>
+<p>Added in API level XE12</p>
+<h4 id="public-abstractobjectgetitemint-position">public abstract <a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> <strong>getItem</strong> (int position) </h4>
+<p>Added in API level XE12</p>
+<h4 id="public-longgetitemidint-position">public long <strong>getItemId</strong> (int position) </h4>
+<p>The default implementation simply assigns the card&#8217;s position as row identifier and assumes this property holds even across data changes. When each data item has a truly unique row identifier, users can override this method to return the real row identifier and override <a href="http://developer.android.com/reference/android/widget/BaseAdapter.html#hasStableIds()"><code>hasStableIds()</code></a> to return true. By doing so, the card scroller is more likely to maintain its view on selected cards across data changes.</p>
+<h4 id="public-intgetitemviewtypeint-position">public int <strong>getItemViewType</strong> (int position) </h4>
+<p>Added in API level XE16</p>
+<h4 id="public-abstract-intgetpositionobjectitem">public abstract int <strong>getPosition</strong> (<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> item) </h4>
+<p>Finds the position of the given item.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>item</td>
+<td>the item to find</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns-1">Returns</h5>
+<ul>
+<li>the position of the given item, or <code>INVALID_POSITION</code> if the item cannot be found</li>
+</ul>
+<p>Added in API level XE12</p>
+<h4 id="public-abstractviewgetviewint-positionviewconvertviewviewgroupparent">public abstract <a href="http://developer.android.com/reference/android/view/View.html">View</a> <strong>getView</strong> (int position, <a href="http://developer.android.com/reference/android/view/View.html">View</a> convertView, <a href="http://developer.android.com/reference/android/view/ViewGroup.html">ViewGroup</a> parent) </h4>
+<h4 id="public-intgetviewtypecount">public int <strong>getViewTypeCount</strong> () </h4>
+<p>The default implementation returns 0 to signal lack of recycling. Users can override this method (only called once when adapter is set) and <a href="#getItemViewType(int)"><code>getItemViewType(int)</code></a> to enable view recycling.</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

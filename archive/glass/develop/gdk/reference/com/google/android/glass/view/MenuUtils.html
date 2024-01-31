@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="menuutils">MenuUtils</h1>
+<p>Added in API level XE12</p>
+<p>A collection of extensions for <a href="http://developer.android.com/reference/android/view/Menu.html"><code>Menu</code></a> and related classes.</p>
+<table>
+<thead>
+<tr>
+<th>Public Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>static void</td>
+<td><a href="#setDescription">setDescription</a>(<a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item, <a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> description)</td>
+</tr>
+<tr>
+<td>static void</td>
+<td><a href="#setDescription">setDescription</a>(<a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item, int description)</td>
+</tr>
+<tr>
+<td>static void</td>
+<td><a href="#setInitialMenuItem">setInitialMenuItem</a>(<a href="http://developer.android.com/reference/android/view/Menu.html">Menu</a> menu, <a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-methods">Public Methods</h2>
+<p>Added in API level XE12</p>
+<h4 id="public-static-voidsetdescriptionmenuitemitemcharsequencedescription">public static void <strong>setDescription</strong> (<a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item, <a href="http://developer.android.com/reference/java/lang/CharSequence.html">CharSequence</a> description) </h4>
+<p>Sets an additional description text on a menu item.</p>
+<p>The description attribute can only be set through this method. The attribute is not supported in XML.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>item</td>
+<td>the menu item</td>
+</tr>
+<tr>
+<td>description</td>
+<td>additional description text</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Throws</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/RuntimeException.html">RuntimeException</a></td>
+<td>if item is not a concrete implementation</td>
+</tr>
+</tbody>
+</table>
+<p>Added in API level XE12</p>
+<h4 id="public-static-voidsetdescriptionmenuitemitemint-description">public static void <strong>setDescription</strong> (<a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item, int description) </h4>
+<p>Sets an additional description text on a menu item.</p>
+<p>The description attribute can only be set through this method. The attribute is not supported in XML.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>item</td>
+<td>the menu item</td>
+</tr>
+<tr>
+<td>description</td>
+<td>additional description text (as a resource ID)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Throws</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/RuntimeException.html">RuntimeException</a></td>
+<td>if item is not a concrete implementation</td>
+</tr>
+</tbody>
+</table>
+<p>Added in API level XE12</p>
+<h4 id="public-static-voidsetinitialmenuitemmenumenumenuitemitem">public static void <strong>setInitialMenuItem</strong> (<a href="http://developer.android.com/reference/android/view/Menu.html">Menu</a> menu, <a href="http://developer.android.com/reference/android/view/MenuItem.html">MenuItem</a> item) </h4>
+<p>Sets the initial menu item when users open a menu.</p>
+<p>By default, the first menu item appears with all the other items to the right. This method lets you set another menu item to initially show, and other items can potentially appear to the left or right of the item that is initially shown.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>menu</td>
+<td>the menu on which preferred initial menu item should be set</td>
+</tr>
+<tr>
+<td>item</td>
+<td>the preferred initial menu item. If this item cannot be found, the menu falls back to the default behavior</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Throws</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/RuntimeException.html">RuntimeException</a></td>
+<td>if item is not a concrete implementation</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title></title>
+</head>
+<body>
+<h1 id="sounds">Sounds</h1>
+<p>Added in API level XE12</p>
+<p>Extra constants for Glass-specific sounds effects.</p>
+<p>This set extends the existing <a href="http://developer.android.com/reference/android/media/AudioManager.html"><code>AudioManager</code></a> constants with Glass-specific sounds.</p>
+<h3 id="general-usage">General usage</h3>
+<p>To play a sound, call <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a> with the desired sound. For example, to play the <a href="#TAP"><code>TAP</code></a> sound:</p>
+<pre><code class="language-java"> AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+ audio.playSoundEffect(Sounds.TAP);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Constants</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td><a href="#DISALLOWED">DISALLOWED</a></td>
+<td>User tried a disallowed action</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#DISMISSED">DISMISSED</a></td>
+<td>User dismissed an item.</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#ERROR">ERROR</a></td>
+<td>An error occurred.</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#SELECTED">SELECTED</a></td>
+<td>An item became selected.</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#SUCCESS">SUCCESS</a></td>
+<td>An action completed successfully.</td>
+</tr>
+<tr>
+<td>int</td>
+<td><a href="#TAP">TAP</a></td>
+<td>User tapped on item.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Inherited Methods</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From class java.lang.Object</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://developer.android.com/reference/java/lang/Object.html">Object</a></td>
+<td>clone()</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>equals(<a href="http://developer.android.com/reference/java/lang/Object.html">Object</a> arg0)</td>
+</tr>
+<tr>
+<td>void</td>
+<td>finalize()</td>
+</tr>
+<tr>
+<td>final <a href="https://developer.android.com/reference/java/lang/Class.html">Class</a>&#60;?&#62;</td>
+<td>getClass()</td>
+</tr>
+<tr>
+<td>int</td>
+<td>hashCode()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notify()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>notifyAll()</td>
+</tr>
+<tr>
+<td><a href="https://developer.android.com/reference/java/lang/String.html">String</a></td>
+<td>toString()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait()</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0, int arg1)</td>
+</tr>
+<tr>
+<td>final void</td>
+<td>wait(long arg0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="constants">Constants</h2>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-intdisallowed">public static final int <strong>DISALLOWED</strong> </h4>
+<p>User tried a disallowed action.</p>
+<h5 id="see-also">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 10</p>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-intdismissed">public static final int <strong>DISMISSED</strong> </h4>
+<p>User dismissed an item.</p>
+<h5 id="see-also-1">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 15</p>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-interror">public static final int <strong>ERROR</strong> </h4>
+<p>An error occurred.</p>
+<h5 id="see-also-2">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 11</p>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-intselected">public static final int <strong>SELECTED</strong> </h4>
+<p>An item became selected.</p>
+<h5 id="see-also-3">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 14</p>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-intsuccess">public static final int <strong>SUCCESS</strong> </h4>
+<p>An action completed successfully.</p>
+<h5 id="see-also-4">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 12</p>
+<p>Added in API level XE12</p>
+<h4 id="public-static-final-inttap">public static final int <strong>TAP</strong> </h4>
+<p>User tapped on item.</p>
+<h5 id="see-also-5">See Also</h5>
+<ul>
+<li>  <a href="http://developer.android.com/reference/android/media/AudioManager.html#playSoundEffect(int)"><code>playSoundEffect(int)</code></a></li>
+</ul>
+<p>Constant Value: 13</p>
+<hr/>
+<p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
+</body>
+</html>
