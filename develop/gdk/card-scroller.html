@@ -4,15 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="card-scroller">Card Scroller</h1>
 <p>With Glass, you can build rich interactions with your cards such as scrolling and animations.</p>
 <h2 id="scrolling-cards-in-activities">Scrolling cards in activities</h2>
-<p>The Glass display and touchpad are great for displaying swipable cards, like in the Glass timeline. If you&#8217;re building an activity, you can create the same type of effect with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollView"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK] widget.</p>
+<p>The Glass display and touchpad are great for displaying swipable cards, like in the Glass timeline. If you&#8217;re building an activity, you can create the same type of effect with the <a href="./reference/com/google/android/glass/widget/CardScrollView.html"><code>CardScrollView</code></a> widget.</p>
 <ol>
-<li> Implement a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollAdapter"><code>CardScrollAdapter</code></a> [<strong>TODO</strong>: ADD LINK] to supply cards to the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollView"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK]. You can build a standard view hierarchy yourself or use the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardBuilder"><code>CardBuilder</code></a> [<strong>TODO</strong>: ADD LINK] class.</li>
-<li> Create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollView"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK] that uses the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollAdapter"><code>CardScrollAdapter</code></a> [<strong>TODO</strong>: ADD LINK] as the supplier for cards.</li>
+<li> Implement a <a href="./reference/com/google/android/glass/widget/CardScrollAdapter.html"><code>CardScrollAdapter</code></a> to supply cards to the <a href="./reference/com/google/android/glass/widget/CardScrollView.html"><code>CardScrollView</code></a>. You can build a standard view hierarchy yourself or use the <a href="./reference/com/google/android/glass/widget/CardBuilder.html"><code>CardBuilder</code></a> class.</li>
+<li> Create a <a href="./reference/com/google/android/glass/widget/CardScrollView.html"><code>CardScrollView</code></a> that uses the <a href="./reference/com/google/android/glass/widget/CardScrollAdapter.html"><code>CardScrollAdapter</code></a> [<strong>TODO</strong>: ADD LINK] as the supplier for cards.</li>
 <li> Set your activity&#8217;s content view to be the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollView"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK] or display the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/CardScrollView"><code>CardScrollView</code></a> [<strong>TODO</strong>: ADD LINK] in a layout.</li>
 </ol>
 <p>Here&#8217;s a simple implementation that scrolls through three cards:</p>

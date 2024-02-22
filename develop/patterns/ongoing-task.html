@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="ongoing-task-pattern">Ongoing Task Pattern</h1>
@@ -40,13 +41,13 @@
 <p><strong>Development Tip</strong></p>
 <p>Create a <strong>Stop</strong> menu item (or similar) for all live cards to remove the live card from the timeline.</p>
 </blockquote>
-<p><img src="static/ongoing-task-stopwatch-ui.png" alt="" /></p>
+<p><img src="../../static/ongoing-task-stopwatch-ui.png" alt="" /></p>
 <h3 id="voice-command">Voice command</h3>
 <p>You should figure out a voice command fairly early in the design process. Voice commands let users start Glassware from the Glass Home (clock card) voice menu, if needed, and is a major part of how you design Glassware.</p>
 <p>For example, the <strong>Post an update</strong> command works well in a fire-and-forget model, where users speak text and the Glassware processes it without any further user intervention. This lets users get back to what they&#8217;re doing quickly.</p>
 <p>On the other hand, for something like <strong>Play a game</strong>, you&#8217;ll usually want to land users on a splash screen so that they can get oriented first. Because this voice command most likely launches an immersion, you can expect users to be okay with seeing extra screens and menus to start the game. Immediately throwing users into a gaming experience right after the voice command is typically a bad experience for games.</p>
 <p>The Stopwatch uses the <strong>Start a stopwatch</strong> voice command. After users invoke the voice command, the Stopwatch immediately starts after a short, interstitial countdown screen, which is better than providing a menu item to start. For ongoing tasks, you&#8217;ll generally want to focus on getting users to the experience as quick as possible, where it makes sense.</p>
-<p><img src="static/ongoing-task-invocation.png" alt="" /></p>
+<p><img src="../../static/ongoing-task-invocation.png" alt="" /></p>
 <blockquote>
 <p><strong>Note</strong>: Glass automatically adds a touch command (shown with your Glassware icon) to the main menu if users choose to tap instead of speak the voice command.</p>
 </blockquote>
@@ -72,10 +73,10 @@
 </ul>
 <blockquote>
 <p><strong>Development Tip</strong>:</p>
-<p>Check out the list of <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html">existing commands</a>.</p>
-<p>For development purposes, you can declare any voice command you want by using <a href="/archive/glass/develop/gdk/starting-glassware#unlisted_commands">voice development mode</a>.</p>
+<p>Check out the list of <a href="../gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html">existing commands</a>.</p>
+<p>For development purposes, you can declare any voice command you want by using <a href="../gdk/starting-glassware#unlisted_commands">voice development mode</a>.</p>
 </blockquote>
-<p><img src="static/ongoing-task-invocation.png" alt="" /></p>
+<p><img src="../../static/ongoing-task-invocation.png" alt="" /></p>
 <h3 id="countdown-view">Countdown view</h3>
 <p>The Stopwatch shows a countdown before the time is actually recorded to give users notice that time is about to elapse.</p>
 <p>The following files are associated with the countdown view:</p>
@@ -90,7 +91,7 @@
 <li>  <code>src&#47;com&#47;google&#47;android&#47;glass&#47;sample&#47;stopwatch&#47;ChronometerDrawer.java</code> - Defines how to render the view. The live card service calls this class to draw to the live card service.</li>
 <li>  <code>src&#47;com&#47;google&#47;android&#47;glass&#47;sample&#47;stopwatch&#47;ChronometerView.java</code> - The stopwatch view that uses the previous layout as it&#8217;s UI.</li>
 </ul>
-<p><img src="static/stopwatch_640.png" alt="" /></p>
+<p><img src="../../static/stopwatch_640.png" alt="" /></p>
 <h3 id="stopwatch-service">Stopwatch service</h3>
 <p>This is the service that manages the live card&#8217;s lifecycle and rendering. The following files are associated with this service:</p>
 <ul>
@@ -103,9 +104,9 @@
 <p><strong>Distributing Tip</strong>:</p>
 <p>All menu items must have a corresponding 50 × 50 white-on-transparent icon associated with them. This is required to launch on MyGlass.</p>
 <p>In addition, all live cards must have a <strong>Stop</strong> menu item that lets users remove the live card from the timeline.</p>
-<p>We provide <a href="../../menu_icons.zip">standard icons</a> you can use if they work for you.</p>
+<p>We provide <a href="../../static/menu_icons.zip">standard icons</a> you can use if they work for you.</p>
 </blockquote>
-<p><img src="static/stop-stopwatch.png" alt="" /></p>
+<p><img src="../../static/stop-stopwatch.png" alt="" /></p>
 <ul>
 <li>  <code>src&#47;com&#47;google&#47;android&#47;glass&#47;sample&#47;stopwatch&#47;MenuActivity.java</code> - Declares the translucent menu activity that immediately shows the menu when the activity is visible.</li>
 <li>  <code>res&#47;values&#47;styles.xml</code> - Defines the translucent style that is applied to the menu.</li>

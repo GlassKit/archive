@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="voice-input">Voice Input</h1>
@@ -11,14 +12,14 @@
 <p>Main voice commands start Glassware from the Home card, contextual voice commands can execute actions within an activity, and the system&#8217;s speech recognition activity lets you receive free-form voice input from users.</p>
 <h2 id="main-voice-commands">Main voice commands</h2>
 <p>These voice commands launch Glassware from the Home card (Clock card). When you declare a main voice command, Glass automatically creates a touch menu item as a fallback if users decide to start your Glassware with tapping on the Home card.</p>
-<p><img src="static/ok-glass-voice-menu.png" alt="" />
-<img src="static/explore-stars-speech.png" alt="" /></p>
+<p><img src="../../static/ok-glass-voice-menu.png" alt="" />
+<img src="../../static/explore-stars-speech.png" alt="" /></p>
 <p>To add a voice command to the <strong>ok glass</strong> voice main menu:</p>
 <ol>
 <li> Create an XML resource for the voice command in <code>res&#47;xml&#47;&#60;my_voice_trigger&#62;.xml</code> that uses one of the existing voice commands defined in <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html"><code>VoiceTriggers.Command</code></a>. For example, here&#8217;s how to use &#8220;Start a run&#8221;.</li>
 </ol>
 <blockquote>
-<p><strong>Note</strong>: You can use <a href="/archive/glass/develop/gdk/voice#unlisted_commands">unlisted voice commands</a> for development purposes.</p>
+<p><strong>Note</strong>: You can use <a href="voice.html#unlisted_commands">unlisted voice commands</a> for development purposes.</p>
 </blockquote>
 <pre><code class="language-xml">&#60;?xml version="1.0" encoding="utf-8"?&#62;
 &#60;trigger command="START_A_RUN" &#47;&#62;
@@ -70,7 +71,7 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 <p>Contextual voice commands allow users to carry out actions from activities. You build contextual voice commands with the standard Android menu APIs but users can invoke the menu items with voice commands instead of touch.</p>
 <p>To enable contextual voice commands for a particular activity:</p>
 <ol>
-<li> Call <code>getWindow().requestFeature (</code><a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/WindowUtils#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a><code>)</code> in the desired activity to enable contextual voice commands. With this feature enabled, the <strong>"ok glass"</strong> menu appears in the footer area of the screen whenever this activity receives focus.</li>
+<li> Call <code>getWindow().requestFeature (</code><a href="./reference/com/google/android/glass/view/WindowUtils.html#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a><code>)</code> in the desired activity to enable contextual voice commands. With this feature enabled, the <strong>"ok glass"</strong> menu appears in the footer area of the screen whenever this activity receives focus.</li>
 <li> Override <a href="http://developer.android.com/reference/android/app/Activity.html#onCreatePanelMenu(int,%20android.view.Menu)"><code>onCreatePanelMenu()</code></a> and handle the case where <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/WindowUtils#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a> is enabled. If enabled, this is where you do one-time menu setup, like inflating a menu resource or calling the <a href="http://developer.android.com/reference/android/view/Menu.html#add(java.lang.CharSequence)"><code>Menu.add()</code></a> methods to create your voice menu system.</li>
 <li> Override <a href="http://developer.android.com/reference/android/view/Window.Callback.html#onMenuItemSelected(int,%20android.view.MenuItem)"><code>onMenuItemSelected()</code></a> to handle the voice commands when users speak them. When users are done selecting a menu item, the <strong>"ok, glass"</strong> voice command automatically reappears in the footer section of the screen, ready to accept a new voice command, as long as the activity remains in focus. The following code enables contextual voice commands, inflates a menu resource when appropriate, and handles voice commands when they are spoken:</li>
 </ol>
@@ -165,12 +166,12 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 &#60;&#47;menu&#62;
 </code></pre>
 <blockquote>
-<p><strong>Note</strong>: The menu titles in the previous menu resource use custom strings, which you can do if you specify the <a href="/archive/glass/develop/gdk/voice#unlisted_commands">development permission.</a> [<strong>TODO</strong>: ADD LINK] In your Glassware, use the values in the <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/ContextualMenus.Command"><code>ContextualMenus.Command</code></a> enum. For example, to use the <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/ContextualMenus.Command#PLAY_MUSIC"><code>PLAY_MUSIC</code></a> and <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/ContextualMenus.Command#PAUSE_MUSIC"><code>PAUSE_MUSIC</code></a> commands, you can create the following menu resource:</p>
+<p><strong>Note</strong>: The menu titles in the previous menu resource use custom strings, which you can do if you specify the <a href="voice.html#unlisted_commands">development permission.</a> [<strong>TODO</strong>: ADD LINK] In your Glassware, use the values in the <a href="./reference/com/google/android/glass/app/ContextualMenus.Command.html"><code>ContextualMenus.Command</code></a> enum. For example, to use the <a href="./reference/com/google/android/glass/app/ContextualMenus.Command.html#PLAY_MUSIC"><code>PLAY_MUSIC</code></a> and <a href="./reference/com/google/android/glass/app/ContextualMenus.Command#PAUSE_MUSIC"><code>PAUSE_MUSIC</code></a> commands, you can create the following menu resource:</p>
 </blockquote>
 <pre><code class="language-xml">&#60;menu xmlns:android="http:&#47;&#47;schemas.android.com&#47;apk&#47;res&#47;android"&#62;    &#60;!-- Use the constants defined in the ContextualMenus.Command enum--&#62;    &#60;item        android:id="@+id&#47;play_menu_item"        android:title="PLAY_MUSIC" &#47;&#62;    &#60;item        android:id="@+id&#47;pause_menu_item"        android:title="PAUSE_MUSIC" &#47;&#62;&#60;&#47;menu&#62;
 </code></pre>
 <ol start="4">
-<li>(Optional) Override <a href="http://developer.android.com/reference/android/view/Window.Callback.html#onPreparePanel(int,%20android.view.View,%20android.view.Menu)"><code>onPreparePanel()</code></a>, checking whether or not <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/WindowUtils#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a> is enabled. If enabled, this is where you can do other logic to set up the menu system, such as adding and removing certain menu items based on some criteria. You can also toggle contextual voice menus on (return <code>true</code>) and off (return <code>false</code>) based on some criteria. For example:</li>
+<li>(Optional) Override <a href="http://developer.android.com/reference/android/view/Window.Callback.html#onPreparePanel(int,%20android.view.View,%20android.view.Menu)"><code>onPreparePanel()</code></a>, checking whether or not <a href="./reference/com/google/android/glass/view/WindowUtils.html#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a> is enabled. If enabled, this is where you can do other logic to set up the menu system, such as adding and removing certain menu items based on some criteria. You can also toggle contextual voice menus on (return <code>true</code>) and off (return <code>false</code>) based on some criteria. For example:</li>
 </ol>
 <pre><code class="language-java">    private boolean mVoiceMenuEnabled;
     ...
@@ -186,7 +187,7 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 </code></pre>
 <h3 id="supporting-voice-and-touch-menus-simultaneously">Supporting voice and touch menus simultaneously</h3>
 <p>Because contextual voice commands use the existing Android menu APIs, you can reuse a lot of the code and resources you already have for touch menus and simultaneously support both types of menus.</p>
-<p>All you need to do is check for the <code>Window.FEATURE_OPTIONS_PANEL</code> feature in addition to the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/WindowUtils#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a> feature that you already are checking for in a few methods and then add in logic to open the touch menu on some user action, such as a tap.</p>
+<p>All you need to do is check for the <code>Window.FEATURE_OPTIONS_PANEL</code> feature in addition to the <a href="./reference/com/google/android/glass/view/WindowUtils.html#FEATURE_VOICE_COMMANDS"><code>WindowUtils.FEATURE_VOICE_COMMANDS</code></a> feature that you already are checking for in a few methods and then add in logic to open the touch menu on some user action, such as a tap.</p>
 <p>For example, you can change the previous activity example to add support for touch menus like this (changes are commented):</p>
 <pre><code class="language-java">&#47;&#47; 1. Check for Window.FEATURE_OPTIONS_PANEL
 &#47;&#47; to inflate the same menu resource for touch menus.
@@ -208,7 +209,7 @@ public boolean onMenuItemSelected(int featureId, MenuItem item) {
 </code></pre>
 <p>With these changes, you can either tap or say <strong>ok glass</strong> to display your menu.</p>
 <h2 id="using-unlisted-voice-commands-for-development">Using unlisted voice commands for development</h2>
-<p>When you want to distribute your Glassware, you must use the approved main voice commands in <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/VoiceTriggers.Command"><code>VoiceTriggers.Command</code></a> and approved contextual voice commands in <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/ContextualMenus.Command"><code>ContextualMenus.Command</code></a>.</p>
+<p>When you want to distribute your Glassware, you must use the approved main voice commands in <a href="./reference/com/google/android/glass/app/VoiceTriggers.Command.html"><code>VoiceTriggers.Command</code></a> and approved contextual voice commands in <a href="./reference/com/google/android/glass/app/ContextualMenus.Command.html"><code>ContextualMenus.Command</code></a>.</p>
 <p>If you want to use voice commands that are not available in the GDK, you can request an Android permission in your <code>AndroidManifest.xml</code> file:</p>
 <pre><code class="language-xml">&#60;uses-permission
      android:name="com.google.android.glass.permission.DEVELOPMENT" &#47;&#62;
@@ -248,7 +249,7 @@ public boolean onMenuItemSelected(int featureId, MenuItem item) {
 &#60;&#47;menu&#62;
 </code></pre>
 <h2 id="starting-speech-recognition">Starting speech recognition</h2>
-<p><img src="./static/speech-activity.png" alt="" /></p>
+<p><img src="../../static/speech-activity.png" alt="" /></p>
 <p>The speech recognition Glassware waits for users to speak and returns the transcribed text after they are done. To start the activity:</p>
 <ol>
 <li> Call <a href="http://developer.android.com/reference/android/app/Activity.html#startActivityForResult(android.content.Intent,%20int)"><code>startActivityForResult()</code></a> with the <a href="http://developer.android.com/reference/android/speech/RecognizerIntent.html#ACTION_RECOGNIZE_SPEECH"><code>ACTION_RECOGNIZE_SPEECH</code></a> intent. The following intent extras are supported when starting the activity:

@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="slider">Slider</h1>
@@ -16,11 +17,11 @@
 </ul>
 </blockquote>
 <h2 id="scroller-slider">Scroller Slider</h2>
-<p><img src="static/slider_scrolling.gif" alt="" /></p>
-<p>Scroller sliders are used to indicate the position of a card as you swipe through multiple cards. You can create the same type of effect using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Scroller"><code>Slider.Scroller</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p><img src="../../static/slider_scrolling.gif" alt="" /></p>
+<p>Scroller sliders are used to indicate the position of a card as you swipe through multiple cards. You can create the same type of effect using <a href="./reference/com/google/android/glass/widget/Slider.Scroller.html"><code>Slider.Scroller</code></a>.</p>
 <ol>
-<li> Use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#from(android.view.View)"><code>Slider.from()</code></a> [<strong>TODO</strong>: ADD LINK] to create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider"><code>Slider</code></a> [<strong>TODO</strong>: ADD LINK] that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
-<li> Create the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Scroller"><code>Slider.Scroller</code></a> [<strong>TODO</strong>: ADD LINK] using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#startScroller(int,%20float)"><code>startScroller()</code></a> [<strong>TODO</strong>: ADD LINK] and set the max and initial positions.</li>
+<li> Use <a href="./reference/com/google/android/glass/widget/Slider.html#from(android.view.View)"><code>Slider.from()</code></a> to create a <a href="./reference/com/google/android/glass/widget/Slider.html"><code>Slider</code></a> that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
+<li> Create the <a href="./reference/com/google/android/glass/widget/Slider.Scroller.html"><code>Slider.Scroller</code></a> using <a href="./reference/com/google/android/glass/widget/Slider.html#startScroller(int,%20float)"><code>startScroller()</code></a> and set the max and initial positions.</li>
 </ol>
 <p>Here&#8217;s a simple implementation that animates a scroller to the next position when the user taps:</p>
 <pre><code class="language-java">public final class SliderActivity extends Activity {
@@ -65,14 +66,14 @@
 }
 </code></pre>
 <h2 id="grace-period-slider">Grace Period Slider</h2>
-<p><img src="static/slider_grace.gif" alt="" /></p>
-<p>Grace period sliders work in activities where it is useful for a user to see a notification, but user interaction is not required. You can add this animation by using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod"><code>Slider.GracePeriod</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p><img src="../../static/slider_grace.gif" alt="" /></p>
+<p>Grace period sliders work in activities where it is useful for a user to see a notification, but user interaction is not required. You can add this animation by using <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.html"><code>Slider.GracePeriod</code></a>.</p>
 <ol>
-<li> Use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#from(android.view.View)"><code>Slider.from()</code></a> [<strong>TODO</strong>: ADD LINK] to create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider"><code>Slider</code></a> [<strong>TODO</strong>: ADD LINK] that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
-<li> Create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod.Listener"><code>GracePeriod.Listener</code></a> [<strong>TODO</strong>: ADD LINK] and implement the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod.Listener#onGracePeriodEnd()"><code>onGracePeriodEnd()</code></a> [<strong>TODO</strong>: ADD LINK] and <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod.Listener#onGracePeriodCancel()"><code>onGracePeriodCancel()</code></a> [<strong>TODO</strong>: ADD LINK] to handle those events.</li>
-<li> Create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod"><code>Slider.GracePeriod</code></a> [<strong>TODO</strong>: ADD LINK] and start the animation by passing in the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod.Listener"><code>GracePeriod.Listener</code></a> [<strong>TODO</strong>: ADD LINK] to the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#startGracePeriod(com.google.android.glass.widget.Slider.GracePeriod.Listener)"><code>startGracePeriod()</code></a> [<strong>TODO</strong>: ADD LINK] method.</li>
+<li> Use <a href="./reference/com/google/android/glass/widget/Slider.html#from(android.view.View)"><code>Slider.from()</code></a> to create a <a href="./reference/com/google/android/glass/widget/Slider.html"><code>Slider</code></a> that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
+<li> Create a <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.Listener.html"><code>GracePeriod.Listener</code></a> and implement the <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.Listener.html#onGracePeriodEnd()"><code>onGracePeriodEnd()</code></a> and <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.Listener.html#onGracePeriodCancel()"><code>onGracePeriodCancel()</code></a> to handle those events.</li>
+<li> Create a <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.html"><code>Slider.GracePeriod</code></a>  and start the animation by passing in the <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.Listener.html"><code>GracePeriod.Listener</code></a> to the <a href="./reference/com/google/android/glass/widget/Slider.html#startGracePeriod(com.google.android.glass.widget.Slider.GracePeriod.Listener)"><code>startGracePeriod()</code></a>  method.</li>
 <li> Override the activity&#8217;s <a href="https://developer.android.com/reference/android/app/Activity.html#onBackPressed()"><code>onBackPressed()</code></a> to handle the swipe down gesture.</li>
-<li> If the user swipes down, call <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod#cancel()"><code>cancel()</code></a> [<strong>TODO</strong>: ADD LINK] on the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod"><code>Slider.GracePeriod</code></a> [<strong>TODO</strong>: ADD LINK] to dismiss the slider.</li>
+<li> If the user swipes down, call <a href="./reference/com/google/android/glass/widget/Slider.GracePeriod.html#cancel()"><code>cancel()</code></a> on the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.GracePeriod.html"><code>Slider.GracePeriod</code></a> to dismiss the slider.</li>
 </ol>
 <p>In the following example, the grace period scroller is initiated with a listener that plays a success sound when the period ends and a dismissed sound if the grace period slider is cancelled:</p>
 <pre><code class="language-java">public final class SliderActivity extends Activity {
@@ -135,12 +136,12 @@
 }
 </code></pre>
 <h2 id="determinate-slider">Determinate Slider</h2>
-<p><img src="static/slider_determinate.gif" alt="" /></p>
-<p>Determinate sliders are mainly used to show progress where you can calculate when a task finishes. You can add this animation by using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Determinate"><code>Slider.Determinate</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p><img src="../../static/slider_determinate.gif" alt="" /></p>
+<p>Determinate sliders are mainly used to show progress where you can calculate when a task finishes. You can add this animation by using <a href="./reference/com/google/android/glass/widget/Slider.Determinate.html"><code>Slider.Determinate</code></a>.</p>
 <ol>
-<li> Use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#from(android.view.View)"><code>Slider.from()</code></a> [<strong>TODO</strong>: ADD LINK] to create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider"><code>Slider</code></a> [<strong>TODO</strong>: ADD LINK] that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
-<li> Create the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Determinate"><code>Slider.Determinate</code></a> [<strong>TODO</strong>: ADD LINK] using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#startDeterminate(int,%20float)"><code>startScroller()</code></a> [<strong>TODO</strong>: ADD LINK] and set the max and initial positions.</li>
-<li> When the animation finishes, call the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Determinate#hide()"><code>hide()</code></a> [<strong>TODO</strong>: ADD LINK] method on the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Determinate"><code>Slider.Determinate</code></a> [<strong>TODO</strong>: ADD LINK] to hide the slider.</li>
+<li> Use <a href="./reference/com/google/android/glass/widget/Slider.html#from(android.view.View)"><code>Slider.from()</code></a> to create a <a href="./reference/com/google/android/glass/widget/Slider.html"><code>Slider</code></a> that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
+<li> Create the <a href="./reference/com/google/android/glass/widget/Slider.Determinate.html"><code>Slider.Determinate</code></a> using <a href="./reference/com/google/android/glass/widget/Slider.html#startDeterminate(int,%20float)"><code>startScroller()</code></a> and set the max and initial positions.</li>
+<li> When the animation finishes, call the <a href="./reference/com/google/android/glass/widget/Slider.Determinate.html#hide()"><code>hide()</code></a> method on the <a href="./reference/com/google/android/glass/widget/Slider.Determinate"><code>Slider.Determinate</code></a> to hide the slider.</li>
 </ol>
 <p>Here&#8217;s a simple implementation that animates the scroller to a set position when the user taps:</p>
 <pre><code class="language-java">public final class SliderActivity extends Activity {
@@ -185,12 +186,12 @@
 }
 </code></pre>
 <h2 id="indeterminate-slider">Indeterminate Slider</h2>
-<p><img src="./static/slider_indeterminate.gif" alt="" /></p>
-<p>Indeterminate sliders can be used for loading screens where it is difficult to calculate when the task finishes. You can add this animation by using <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Indeterminate"><code>Slider.Indeterminate</code></a> [<strong>TODO</strong>: ADD LINK].</p>
+<p><img src="../../static/slider_indeterminate.gif" alt="" /></p>
+<p>Indeterminate sliders can be used for loading screens where it is difficult to calculate when the task finishes. You can add this animation by using <a href="./reference/com/google/android/glass/widget/Slider.Indeterminate.html"><code>Slider.Indeterminate</code></a>.</p>
 <ol>
-<li> Use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#from(android.view.View)"><code>Slider.from()</code></a> [<strong>TODO</strong>: ADD LINK] to create a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider"><code>Slider</code></a> [<strong>TODO</strong>: ADD LINK] that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
-<li> Start the animation with the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider#startIndeterminate()"><code>Slider.startIndeterminate()</code></a> [<strong>TODO</strong>: ADD LINK] method.</li>
-<li> When you are ready to stop the animation, call the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Indeterminate#hide()"><code>hide()</code></a> [<strong>TODO</strong>: ADD LINK] method on the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/widget/Slider.Indeterminate"><code>Slider.Indeterminate</code></a> [<strong>TODO</strong>: ADD LINK].</li>
+<li> Use <a href="./reference/com/google/android/glass/widget/Slider.html#from(android.view.View)"><code>Slider.from()</code></a> to create a <a href="./reference/com/google/android/glass/widget/Slider.html"><code>Slider</code></a> that uses a <a href="https://developer.android.com/reference/android/view/View.html"><code>View</code></a> to display the slider.</li>
+<li>Start the animation with the <a href="./reference/com/google/android/glass/widget/Slider.html#startIndeterminate()"><code>Slider.startIndeterminate()</code></a> method.</li>
+<li> When you are ready to stop the animation, call the <a href="./reference/com/google/android/glass/widget/Slider.Indeterminate.html#hide()"><code>hide()</code></a> method on the <a href="./reference/com/google/android/glass/widget/Slider.Indeterminate.html"><code>Slider.Indeterminate</code></a>.</li>
 </ol>
 <p>Here&#8217;s a simple implementation that creates the indeterminate scroller when the user taps the card and hides it when the user taps again:</p>
 <pre><code class="language-java">public final class SliderActivity extends Activity {

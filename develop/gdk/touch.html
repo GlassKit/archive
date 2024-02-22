@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="touch-gestures">Touch Gestures</h1>
@@ -62,13 +63,13 @@
 </code></pre>
 <h2 id="detecting-gestures-with-a-gesture-detector">Detecting gestures with a gesture detector</h2>
 <p>Gesture detectors let you detect simple gestures as well as more complex gestures, such as those that use multiple fingers or scrolling. Complex gestures do not have a corresponding D-pad key.</p>
-<p>The <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector">GestureDetector</a> [<strong>TODO</strong>: ADD LINK] provides listener interfaces that you can implement to be notified of a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/Gesture">Gesture</a> [<strong>TODO</strong>: ADD LINK].</p>
+<p>The <a href="./reference/com/google/android/glass/touchpad/GestureDetector.html">GestureDetector</a> provides listener interfaces that you can implement to be notified of a <a href="./reference/com/google/android/glass/touchpad/Gesture.html">Gesture</a>.</p>
 <h3 id="detecting-activity-level-gestures">Detecting activity-level gestures</h3>
 <p>Detecting gestures at the activity level is appropriate when you don&#8217;t care what part of your UI has focus. For example, if you want to bring up a menu when users tap the touchpad, regardless of what view has focus, you&#8217;d handle the <a href="http://developer.android.com/reference/android/view/MotionEvent.html"><code>MotionEvent</code></a> inside the activity.</p>
 <p>The following example:</p>
 <ol>
-<li> Creates a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] that implements listeners to process recognized gestures.</li>
-<li> Overrides the activity&#8217;s <a href="http://developer.android.com/reference/android/app/Activity.html#onGenericMotionEvent(android.view.MotionEvent)"><code>onGenericMotionEvent()</code></a> method to pass the motion events to the gesture detector&#8217;s <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/touchpad/GestureDetector#onMotionEvent(android.view.MotionEvent)"><code>onMotionEvent()</code></a> [<strong>TODO</strong>: ADD LINK] method.</li>
+<li> Creates a <a href="./reference/com/google/android/glass/touchpad/GestureDetector.html"><code>GestureDetector</code></a> that implements listeners to process recognized gestures.</li>
+<li> Overrides the activity&#8217;s <a href="http://developer.android.com/reference/android/app/Activity.html#onGenericMotionEvent(android.view.MotionEvent)"><code>onGenericMotionEvent()</code></a> method to pass the motion events to the gesture detector&#8217;s <a href="./reference/com/google/android/glass/touchpad/GestureDetector.html#onMotionEvent(android.view.MotionEvent)"><code>onMotionEvent()</code></a> [<strong>TODO</strong>: ADD LINK] method.</li>
 </ol>
 <p>When a motion event occurs, the system passes it to the gesture detector. If recognized, the gesture detector notifies the appropriate listener to process the event.</p>
 <pre><code class="language-java">public class MainActivity extends Activity {
@@ -135,7 +136,7 @@
 <ol>
 <li> Creates a custom view that overrides the <a href="http://developer.android.com/reference/android/view/View.html#dispatchGenericFocusedEvent(android.view.MotionEvent)"><code>dispatchGenericFocusedEvent()</code></a> method. When a motion event occurs, this method passes the motion event to the gesture detector.</li>
 <li> Declares the view to be focusable so that it detects events when it has focus.</li>
-<li> Creates a <a href="https://developers.google.com/glass/eap/gdk/reference/com/google/android/glass/gesture/touch/GestureDetector"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] that implements listeners to process recognized gestures.</li>
+<li> Creates a <a href="./reference/com/google/android/glass/gesture/touch/GestureDetector.html"><code>GestureDetector</code></a> [<strong>TODO</strong>: ADD LINK] that implements listeners to process recognized gestures.</li>
 </ol>
 <p>When the gesture detector recognizes a motion while the view is in focus, the gesture detector calls the appropriate listener.</p>
 <pre><code class="language-java">&#47;**

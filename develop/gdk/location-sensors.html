@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="locations-and-sensors">Locations and Sensors</h1>
@@ -240,10 +241,10 @@ public class LiveCardService extends Service {
 <ul>
 <li>  The Glass sensor coordinate system is shown below relative to the Glass display. For more information, see <a href="http://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-coords">sensor coordinate system</a>.</li>
 </ul>
-<p><img src="static/sensor-coord.png" alt="" /></p>
+<p><img src="../../static/sensor-coord.png" alt="" /></p>
 <ul>
 <li>  The accelerometer, gyroscope, and magnetometer are located on the optics pod of the Glass device, which users rotate to align the device with their sight. You cannot measure the angle of the optics pod directly, so be aware of this when using angles from these sensors for applications such as compass heading.</li>
-<li>  To preserve battery life, only listen to sensors when you need them. For example, if your Glassware uses a <a href="http://developer.android.com/reference/android/app/Service.html"><code>Service</code></a> to render a <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> [<strong>TODO</strong>: ADD LINK] and you only need the sensors when the live card is visible, use the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> [<strong>TODO</strong>: ADD LINK] surface callback methods to start and stop listening to the sensors.</li>
+<li>  To preserve battery life, only listen to sensors when you need them. For example, if your Glassware uses a <a href="http://developer.android.com/reference/android/app/Service.html"><code>Service</code></a> to render a <a href="./reference/com/google/android/glass/timeline/LiveCard.html"><code>LiveCard</code></a> and you only need the sensors when the live card is visible, use the <a href="./reference/com/google/android/glass/timeline/LiveCard.html"><code>LiveCard</code></a> surface callback methods to start and stop listening to the sensors.</li>
 <li>  Sensor event callbacks run on the UI thread, so process events and return as quickly as possible. Consider pushing sensor events into a queue and using a background thread to handle them if your processing takes too long.</li>
 <li>  50 Hz is often a sufficient sampling rate for tracking head motion.</li>
 </ul>

@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
 <h1 id="glassware-guidelines">Glassware Guidelines</h1>
@@ -41,10 +42,10 @@
 <h3 id="d6.-follow-standard-card-design-and-templates">D6. Follow standard card design and templates</h3>
 <p>When possible, use approved <a href="../design/style#layout_templates">card designs</a>. <a href="https://developers.google.com/glass/tools-downloads/playground">Mirror API</a> [<strong>TODO</strong>: ADD LINK] and <a href="../develop/gdk/card-design#xml_layouts">GDK</a> templates are available for some of these designs.</p>
 <ul>
-<li>  Use the styles in <a href="../design/static/base_style.css">base_style.css</a> if you are using the Mirror API.</li>
+<li>  Use the styles in <a href="../static/base_style.css">base_style.css</a> if you are using the Mirror API.</li>
 <li>  Follow the <a href="../design/style#card_regions">general rules</a> for padding and spacing as the built-in templates.</li>
 </ul>
-<p><img src="../design/static/standard-template.png" alt="" /></p>
+<p><img src="../static/standard-template.png" alt="" /></p>
 <h3 id="d7.-bundle-and-paginate-cards-properly">D7. Bundle and paginate cards properly</h3>
 <p>Bundles and pagination allow you to group together cards, but you should use them correctly in the following situations.</p>
 <blockquote>
@@ -80,8 +81,8 @@
 <h2 id="web-properties">Web properties</h2>
 <h3 id="wp1.-highlight-glass-specific-features-on-your-website">WP1. Highlight Glass-specific features on your website</h3>
 <ul>
-<li>  Use the <a href="../send-to-glass-buttons.zip">Send to Glass</a> icons if sending content to Glass from the web.</li>
-<li>  Use the <a href="../get-it-on-glass-buttons.zip">Get it on Glass</a> icons if providing a link to download Glassware.</li>
+<li>  Use the <a href="../static/send-to-glass-buttons.zip">Send to Glass</a> icons if sending content to Glass from the web.</li>
+<li>  Use the <a href="../static/get-it-on-glass-buttons.zip">Get it on Glass</a> icons if providing a link to download Glassware.</li>
 <li>  Ensure correct grammar and spelling.</li>
 </ul>
 <h3 id="wp2.-provide-easy-authorization-flows">WP2. Provide easy authorization flows</h3>
@@ -97,12 +98,12 @@
 <li>  Indicate visually that a settings change is saved.</li>
 <li>  Indicate update frequency overall and per feed if applicable to <a href="../design/principles#keep_it_relevant">keep your content relevant</a>. The following screenshot shows an example of allowing users to set update frequency and feed types.</li>
 </ul>
-<p><img src="static/cnn-settings.png" alt="" /></p>
+<p><img src="../static/cnn-settings.png" alt="" /></p>
 <h2 id="branding">Branding</h2>
 <h3 id="b1.-use-proprietary-glass-assets-correctly">B1. Use proprietary Glass assets correctly</h3>
 <p>The Glass brand and its associated assets are proprietary and are carefully designed and used by Google.</p>
 <ul>
-<li>  Do not use, modify, or mimic proprietary Glass logos or assets in any way unless they are provided on the <a href="/glass/tools-downloads/downloads">Assets</a> page.</li>
+<li>  Do not use, modify, or mimic proprietary Glass logos or assets in any way unless they are provided on the <a href="../tools-downloads/downloads.html">Assets</a> page.</li>
 <li>  Do not use, modify, or mimic the Glass logo font for use in your product.</li>
 </ul>
 <h2 id="writing">Writing</h2>
@@ -111,9 +112,9 @@
 <h3 id="w2.-name-your-glassware-appropriately">W2. Name your Glassware appropriately</h3>
 <p>Ensure your Glassware name accurately portrays the Glassware&#8217;s functionality or branding. Do not use the string &#8220;Glass&#8221; in the name, unless it is in the phrase &#8220;for Glass.&#8221; For example, &#8220;Cat Facts for Glass&#8221; is okay, but not &#8220;Glass Cat Facts&#8221; or &#8220;Glassy Cat Photos.&#8221;</p>
 <h3 id="w3.-use-glass-terms-correctly">W3. Use Glass terms correctly</h3>
-<p>See the <a href="../branding-guidelines#glass_in_text">Glass in text</a> section for restrictions and guidelines.</p>
+<p>See the <a href="../branding-guidelines.html#glass_in_text">Glass in text</a> section for restrictions and guidelines.</p>
 <h3 id="w5.-use-glass-voice">W5. Use Glass voice</h3>
-<p>Follow <a href="../design/style#writing">guidelines</a> for writing when applicable.</p>
+<p>Follow <a href="../design/style.html#writing">guidelines</a> for writing when applicable.</p>
 <h2 id="testing">Testing</h2>
 <h3 id="t1.-test-on-actual-hardware">T1. Test on actual hardware</h3>
 <p>Run your Glassware on actual Glass hardware. This is the only way to accurately gauge the user experience. Also ensure that GDK Glassware does not cause unexpected performance, such as overheating Glass.</p>

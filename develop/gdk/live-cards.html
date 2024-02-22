@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="live-cards">Live Cards</h1>
@@ -15,7 +16,7 @@
 <blockquote>
 <p><strong>Note</strong>: The Glass system also removes live cards during a reboot or when the system is low on resources unless you use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#attach(android.app.Service)">LiveCard.attach()</a> [<strong>TODO</strong> ADD LINK].</p>
 </blockquote>
-<p><img src="static/live-card-timeline.png" alt="" /></p>
+<p><img src="../../static/live-card-timeline.png" alt="" /></p>
 <p>Users typically start live cards by speaking a voice command at the main menu, which starts a background service that renders the card. They can then tap the card to show menu items that can act on the card, such as dismissing it from the timeline.</p>
 <h2 id="when-to-use-them">When to use them</h2>
 <p>Live cards are designed for ongoing tasks that users can jump in and out of frequently, such as a display that shows the running status of an action, an animated map during navigation, or a music player.</p>
@@ -23,18 +24,18 @@
 <p>When using live cards, the timeline still has control over the user experience, so swiping forward or backward on a live card navigates the timeline instead acting on the live card itself. In addition, the screen turns on and off based on how the system behaves (after 5 seconds with no user interaction or during a head nudge up).</p>
 <p>However, live cards have access to many of the same features an <a href="ui.html">immersion</a> does, such as sensor or GPS data. This lets you still create compelling experiences while allowing users to stay in the timeline experience to do other things, such as check messages.</p>
 <h2 id="architecture">Architecture</h2>
-<p><img src="static/live-card-service.png" alt="" /></p>
+<p><img src="../../static/live-card-service.png" alt="" /></p>
 <p>Live cards require a long running context to own them for the entire time that they are visible, so manage them in a background service.</p>
 <p>You can then publish and render a live card as soon as the service starts or in response to other events that the service monitors. You can render live cards with low frequency (once every few seconds), or high frequency (up to as many times as the system can refresh).</p>
 <p>When the live card is no longer relevant, destroy the service to stop rendering.</p>
 <h3 id="low-frequency-rendering">Low-Frequency Rendering</h3>
 <p>Low-frequency rendering is limited to a small set of Android views and can only update the display once every few seconds.</p>
 <p>It&#8217;s a simple way to create live cards with simple content that doesn&#8217;t require constant rendering or frequent updates.</p>
-<p><img src="static/live-card-remoteview.png" alt="" /></p>
+<p><img src="../../static/live-card-remoteview.png" alt="" /></p>
 <h3 id="high-frequency-rendering">High Frequency Rendering</h3>
 <p>High frequency rendering lets you use more of the options available in the Android graphics framework.</p>
 <p>The system gives you the actual backing surface of the live card that you draw directly onto using 2D views and layouts or even complex 3D graphics with OpenGL.</p>
-<p><img src="static/live-card-surface.png" alt="" /></p>
+<p><img src="../../static/live-card-surface.png" alt="" /></p>
 <h2 id="creating-low-frequency-live-cards">Creating low-frequency live cards</h2>
 <p>Low frequency rendering requires a UI supplied by a <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> object, which supports the following subset of Android layouts and views:</p>
 <ul>st
@@ -62,8 +63,8 @@
 </ul>
 <p>Keep in mind:</p>
 <ul>
-<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setAction(android.app.PendingIntent)"><code>setAction()</code></a> for the timeline to publish the card.</li>
-<li>  To make changes to a card after publishing, call <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setViews(android.widget.RemoteViews)"><code>setViews()</code></a> on the card with the updated <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> object before publishing again.</li>
+<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="./reference/com/google/android/glass/timeline/LiveCard.html#setAction(android.app.PendingIntent)"><code>setAction()</code></a> for the timeline to publish the card.</li>
+<li>  To make changes to a card after publishing, call <a href="./reference/com/google/android/glass/timeline/LiveCard.html#setViews(android.widget.RemoteViews)"><code>setViews()</code></a> on the card with the updated <a href="http://developer.android.com/reference/android/widget/RemoteViews.html">RemoteViews</a> object before publishing again.</li>
 </ul>
 <p>To create low-frequency live cards:</p>
 <ol>
@@ -268,13 +269,13 @@ public class LiveCardService extends Service {
 <p>Keep in mind:</p>
 <ul>
 <li>  You should always create a background service to render on the live card&#8217;s surface.</li>
-<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#setAction(android.app.PendingIntent)"><code>setAction()</code></a>.</li>
-<li>  Use <a href="https://developers.google.com/glass/eap/gdk/reference/com/google/android/glass/timeline/GlRenderer"><code>GLRenderer</code></a> if you are rendering OpenGL and <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a> for all other cases.</li>
+<li>  Live cards must always have a <a href="http://developer.android.com/reference/android/app/PendingIntent.html"><code>PendingIntent</code></a> declared with <a href="./reference/com/google/android/glass/timeline/LiveCard.html#setAction(android.app.PendingIntent)"><code>setAction()</code></a>.</li>
+<li>  Use <a href="./reference/com/google/android/glass/timeline/GlRenderer.html"><code>GLRenderer</code></a> if you are rendering OpenGL and <a href="./reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a> for all other cases.</li>
 </ul>
 <h3 id="using-directrenderingcallback">Using DirectRenderingCallback</h3>
 <p>To create live cards with standard Android views and drawing logic:</p>
 <ol>
-<li> Create a class that implements <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a>, Implementing the callbacks in these interfaces let you carry out actions during important events of the live card&#8217;s surface lifecycle.</li>
+<li> Create a class that implements <a href="./reference/com/google/android/glass/timeline/DirectRenderingCallback.html"><code>DirectRenderingCallback</code></a>, Implementing the callbacks in these interfaces let you carry out actions during important events of the live card&#8217;s surface lifecycle.</li>
 </ol>
 <blockquote>
 <p><strong>Note</strong>: The callback methods in these interfaces are not invoked on the main UI thread.</p>
@@ -388,7 +389,7 @@ public class LiveCardService extends Service {
 }
 </code></pre>
 <ol start="2">
-<li>Set an instance of your <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/DirectRenderingCallback"><code>DirectRenderingCallback</code></a> as the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard"><code>LiveCard</code></a> <a href="http://developer.android.com/reference/android/view/SurfaceHolder.Callback.html"><code>SurfaceHolder</code></a>&#8217;s callback. This lets the live card know what logic to use to render itself.</li>
+<li>Set an instance of your <a href="./reference/com/google/android/glass/timeline/DirectRenderingCallback.html"><code>DirectRenderingCallback</code></a> as the <a href="./reference/com/google/android/glass/timeline/LiveCard.html"><code>LiveCard</code></a> <a href="http://developer.android.com/reference/android/view/SurfaceHolder.Callback.html"><code>SurfaceHolder</code></a>&#8217;s callback. This lets the live card know what logic to use to render itself.</li>
 </ol>
 <pre><code class="language-java">&#47;&#47; Tag used to identify the LiveCard in debugging logs.
 private static final String LIVE_CARD_TAG = "my_card";
@@ -424,7 +425,7 @@ private void unpublishCard(Context context) {
 </code></pre>
 <h3 id="using-opengl">Using OpenGL</h3>
 <ol>
-<li> Create a class that implements <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/GlRenderer"><code>GlRenderer</code></a> [<strong>TODO</strong>: ADD LINK]. Implementing the callbacks in this interface lets you carry out actions during important events of the live card&#8217;s surface lifecycle. This example draws a colored, rotating cube.</li>
+<li> Create a class that implements <a href="./reference/com/google/android/glass/timeline/GlRenderer.html"><code>GlRenderer</code></a> [<strong>TODO</strong>: ADD LINK]. Implementing the callbacks in this interface lets you carry out actions during important events of the live card&#8217;s surface lifecycle. This example draws a colored, rotating cube.</li>
 </ol>
 <blockquote>
 <p><strong>Note</strong>: The callback methods in these interfaces are not invoked on the main UI thread.</p>
@@ -733,20 +734,20 @@ public class Cube {
 }
 </code></pre>
 <h2 id="giving-a-live-card-focus">Giving a live card focus</h2>
-<p>When you publish a live card with <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#publish(com.google.android.glass.timeline.LiveCard.PublishMode)"><code>LiveCard.publish()</code></a> [<strong>TODO</strong>: ADD LINK], you pass it a parameter to control whether or not it has focus immediately.</p>
-<p>To have the timeline jump to the card immediately after publishing, use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard.PublishMode#REVEAL"><code>LiveCard.PublishMode.REVEAL</code></a> [<strong>TODO</strong>: ADD LINK]. To publish the card silently and make users navigate to the card on their own, use <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard.PublishMode#SILENT"><code>LiveCard.PublishMode.SILENT</code></a> [<strong>TODO</strong>: ADD LINK].</p>
-<p>In addition, the <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/timeline/LiveCard#navigate()"><code>LiveCard.navigate()</code></a> [<strong>TODO</strong>: ADD LINK] method lets you jump to the card after it&#8217;s been published. For example, if users try to start your live card from the main voice menu and it is already started, you can jump to the live card with this method.</p>
+<p>When you publish a live card with <a href="./reference/com/google/android/glass/timeline/LiveCard.html#publish(com.google.android.glass.timeline.LiveCard.PublishMode)"><code>LiveCard.publish()</code></a>, you pass it a parameter to control whether or not it has focus immediately.</p>
+<p>To have the timeline jump to the card immediately after publishing, use <a href="./reference/com/google/android/glass/timeline/LiveCard.PublishMode.html#REVEAL"><code>LiveCard.PublishMode.REVEAL</code></a>. To publish the card silently and make users navigate to the card on their own, use <a href="./reference/com/google/android/glass/timeline/LiveCard.PublishMode.html#SILENT"><code>LiveCard.PublishMode.SILENT</code></a>.</p>
+<p>In addition, the <a href="./reference/com/google/android/glass/timeline/LiveCard.html#navigate()"><code>LiveCard.navigate()</code></a> method lets you jump to the card after it&#8217;s been published. For example, if users try to start your live card from the main voice menu and it is already started, you can jump to the live card with this method.</p>
 <h2 id="creating-and-displaying-a-menu">Creating and displaying a menu</h2>
 <p>Live cards cannot show their own menu system, so you need to create an activity to display a menu for the live card.</p>
 <p>The menu activity can then have items for stopping the live card, starting an immersion, or any other action you want to carry out. You can also add system settings activities, such as volume control, as a menu item. For more information, see <a href="starting-glassware.html#starting_settings">Starting settings</a>.</p>
 <blockquote>
 <p><strong>Note</strong>: All live cards should have a <strong>Stop</strong> menu item so that users can remove the live card from the timeline when they are done with it.</p>
 </blockquote>
-<p><img src="static/live-card-menu.png" alt="" /></p>
+<p><img src="../../static/live-card-menu.png" alt="" /></p>
 <h3 id="creating-menu-resources">Creating menu resources</h3>
 <p>Creating menu resources is the same as on the Android platform, but follow these guidelines for Glass:</p>
 <ul>
-<li>  For each menu item, provide a 50 × 50 pixel menu item icon. The menu icon must be white in color on a transparent background. See the <a href="../../menu_icons.zip">Glass menu item icons</a> for an example or to download them for your own use.</li>
+<li>  For each menu item, provide a 50 × 50 pixel menu item icon. The menu icon must be white in color on a transparent background. See the <a href="../../static/menu_icons.zip">Glass menu item icons</a> for an example or to download them for your own use.</li>
 <li>  Use a short name that describes the action and is in title case. An imperative verb works well (for example, <strong>Share</strong> or <strong>Reply all</strong>).</li>
 <li>  Glass does not display live cards without a menu item. At the very least, provide a <strong>Stop</strong> menu item, so users can remove the live card from the timeline.</li>
 <li>  The <a href="http://developer.android.com/reference/android/widget/CheckBox.html">CheckBox</a> widget is not supported.</li>
@@ -845,7 +846,7 @@ mLiveCard.publish(LiveCard.PublishMode.REVEAL); &#47;&#47; or SILENT
 </code></pre>
 <h3 id="supporting-contextual-voice-commands">Supporting contextual voice commands</h3>
 <ol>
-<li> Indicate that your <code>MenuActivity</code> supports <a href="https://developers.google.com/glass/develop/gdk/voice#contextual_voice_commands">contextual voice commands</a> [<strong>TODO</strong>: ADD LINK]:</li>
+<li> Indicate that your <code>MenuActivity</code> supports <a href="voice.html#contextual_voice_commands">contextual voice commands</a>:</li>
 </ol>
 <pre><code class="language-java">&#47;&#47; Initialize your LiveCard as usual.
 mLiveCard.setVoiceActionEnabled(true);
@@ -936,9 +937,9 @@ public class MenuActivity extends Activity {
     }
 }
 </code></pre>
-<p>Check out the <a href="https://developers.google.com/glass/develop/gdk/voice#contextual_voice_commands">contextual voice commands</a> [<strong>TODO</strong>: ADD LINK] guide for more information.</p>
+<p>Check out the <a href="voice.html#contextual_voice_commands">contextual voice commands</a> guide for more information.</p>
 <h3 id="menu-utilities">Menu utilities</h3>
-<p>A few helper methods are available to modify the look and behavior of menus. See <a href="https://developers.google.com/glass/develop/gdk/reference/com/google/android/glass/view/MenuUtils"><code>MenuUtils</code></a> [<strong>TODO</strong>: ADD LINK] for more information.</p>
+<p>A few helper methods are available to modify the look and behavior of menus. See <a href="./reference/com/google/android/glass/view/MenuUtils.html"><code>MenuUtils</code></a> for more information.</p>
 <hr/>
 <p>Portions of this page are reproduced from work created and <a href="https://developers.google.com/readme/policies">shared by Google</a> and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.</p>
 </body>

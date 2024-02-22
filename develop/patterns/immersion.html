@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title></title>
+<link rel="stylesheet" href="../../static/style.css">
 </head>
 <body>
 <h1 id="immersion-pattern">Immersion Pattern</h1>
@@ -40,24 +41,24 @@
 <h4 id="splash-screen">Splash screen</h4>
 <p>This screen is the first one users see when they start the Charades immersion. It allows users to orient themselves before having to jump into the gaming experience and is a general gaming construct that users are familiar with.</p>
 <p>When users tap on the touchpad, a menu system with two items appears, <strong>New Game</strong> and <strong>Instructions</strong>.</p>
-<p><img src="static/immersion-charades-menu.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-menu.png" alt="" /></p>
 <h4 id="instructions-mode">Instructions mode</h4>
 <p>When creating immersions, input mechanisms are sometimes novel, so it&#8217;s useful to let users know how they should interact with the immersion, especially with a game.</p>
 <p>This set of cards shows the instructions for the game and guides users on how to play and what gestures to use to navigate through the UI. Users get to it by tapping on the <strong>Instructions</strong> menu item from the splash screen.</p>
-<p><img src="static/immersion-charades-instructions.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-instructions.png" alt="" /></p>
 <h4 id="gameplay-mode">Gameplay mode</h4>
 <p>These screens comprise the main gameplay flow. Users can get to this flow by tapping on the <strong>New game</strong> menu item from the splash screen.</p>
 <p>This set of cards shows a random word (up to 10). Users skip a word by swiping forward and tap the touchpad when they correctly describe the word.</p>
-<p><img src="static/immersion-charades-gameplay.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-gameplay.png" alt="" /></p>
 <h4 id="game-results-screen">Game results screen</h4>
 <p>This screen shows the results of the game. The &#8220;Game over&#8221; screen initially appears and users can swipe forward to see the game results. When users tap on any of the results cards, the <strong>New Game</strong> menu item appears to let users start another game.</p>
-<p><img src="static/immersion-charades-results.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-results.png" alt="" /></p>
 <h3 id="voice-command">Voice command</h3>
 <p>You should figure out a voice command fairly early in the design process. Voice commands let users start Glassware from the Glass Home (clock card) voice menu, if needed, and is a major part of how you design Glassware.</p>
 <p>For example, the <strong>Post an update</strong> command works well in a fire-and-forget model, where users speak the command and some text and the Glassware processes it without any further user intervention. This lets users get back to what they&#8217;re doing quickly.</p>
 <p>On the other hand, for something like <strong>Play a game</strong>, you&#8217;ll usually want to land users on a splash screen so that they can get oriented first. Because this voice command most likely launches an immersion, you can expect users to be okay with seeing extra screens and menus to start the game. Immediately throwing users into a gaming experience right after the voice command is typically a bad experience for games.</p>
 <p>Charades uses the <strong>Play a game</strong> voice command . After users invoke the voice command, the Charades splash screen appears, prompting users to <strong>Tap for more options</strong> (<strong>New game</strong> or <strong>Instructions</strong> in this case).</p>
-<p><img src="static/immersion-charades-invocation.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-invocation.png" alt="" /></p>
 <blockquote>
 <p><strong>Note:</strong> Glass automatically adds a touch command to the main menu if users choose to tap instead of speak the voice command.</p>
 </blockquote>
@@ -95,12 +96,12 @@
 </ul>
 <blockquote>
 <p><strong>Development Tip</strong>: </p>
-<p>Check out the list of <a href="/archive/glass/develop/gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html">existing commands</a>.</p>
-<p>For development purposes, you can declare any voice command you want by using <a href="/archive/glass/develop/gdk/starting-glassware#unlisted_commands">voice development mode</a>.</p>
+<p>Check out the list of <a href="../gdk/reference/com/google/android/glass/app/VoiceTriggers.Command.html">existing commands</a>.</p>
+<p>For development purposes, you can declare any voice command you want by using <a href="../gdk/starting-glassware#unlisted_commands">voice development mode</a>.</p>
 </blockquote>
 <h3 id="splash-screen-activity">Splash screen activity</h3>
 <p>The splash screen is the first thing users see when starting Charades and orients them before starting the game.</p>
-<p><img src="static/immersion-charades-menu.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-menu.png" alt="" /></p>
 <p>The following files are associated with this activity:</p>
 <ul>
 <li>  <code>res&#47;layout&#47;activity_start_game.xml</code> - Declares the layout for the splash screen.</li>
@@ -125,21 +126,21 @@
 </ul>
 <h3 id="instructions-activity">Instructions activity</h3>
 <p>The instructions activity shows three cards that explain how to play the game. It detects whether or not users carry out the action displayed on the card before they can continue.</p>
-<p><img src="static/immersion-charades-instructions.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-instructions.png" alt="" /></p>
 <p>The following files are associated with this activity:</p>
 <ul>
 <li>  <code>src&#47;com&#47;google&#47;android&#47;glass&#47;sample&#47;charades&#47;TutorialActivity.java</code> - Extends <code>BaseGameActivity</code> and defines what instruction text to show and how to handle gestures as users go through the instructions for the game.</li>
 </ul>
 <h3 id="gameplay-activity">Gameplay activity</h3>
 <p>The gameplay activity defines the main flow of the game. It figures out what words to show, how to keep score, has a gesture detector to handle gestures, and launches the results activity when the game is over.</p>
-<p><img src="static/immersion-charades-gameplay.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-gameplay.png" alt="" /></p>
 <p>The following files are associated with this activity:</p>
 <ul>
 <li>  <code>GamePlayActivity</code> - Extends <code>BaseGameActivity</code> and contains the main gameflow logic.</li>
 </ul>
 <h3 id="the-results-activity">The results activity</h3>
 <p>The result activity shows the guessed words, unguessed words, and the score for the game. It also contains a menu item that lets users start a new game.</p>
-<p><img src="static/immersion-charades-results.png" alt="" /></p>
+<p><img src="../../static/immersion-charades-results.png" alt="" /></p>
 <p>The following files are associated with this activity:</p>
 <ul>
 <li>  <code>res&#47;layout&#47;game_results.xml</code> - Defines the layout for the &#8220;Game over&#8221; card</li>
